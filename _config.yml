@@ -1,3 +1,2 @@
 title: ShawnDeLaTV
-remote_theme: mmistakes/minimal-mistakes
-minimal_mistakes_skin: "default"
+theme: jekyll-theme-cayman
