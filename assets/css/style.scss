@@ -2,27 +2,26 @@
 ---
 @import "{{ site.theme }}";
 
-// Couleurs sombres personnalisées
 body {
-  background-color: #121212; // Fond noir très foncé
-  color: #e0e0e0; // Texte gris clair pour ne pas agresser les yeux
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
 }
 
 .page-header {
-  background-color: #1a1a1a; // Bannière du haut sombre
-  background-image: none; // On enlève la texture claire d'origine
-  border-bottom: 1px solid #333;
+  background-color: #1a1a1a !important;
+  background-image: none !important;
+  border-bottom: 1px solid #333 !important;
 }
 
 .main-content h1, .main-content h2, .main-content h3 {
-  color: #ffffff; // Titres bien blancs pour le contraste
+  color: #ffffff !important;
 }
 
 .main-content a {
-  color: #4da6ff; // Liens en bleu clair pour la visibilité
+  color: #4da6ff !important;
 }
 
 code {
-  background-color: #252525;
-  color: #ff79c6;
+  background-color: #252525 !important;
+  color: #ff79c6 !important;
 }
