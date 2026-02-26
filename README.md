@@ -1,17 +1,31 @@
-# Bienvenue sur mon Portfolio 👋
+---
+layout: default
+title: Home
+---
 
-[Accueil](index.md) | [Mes Projets](projets.md) | [Certifications](certifications.md) | [Mon CV](cv.md)
+# ShawnDeLaTV
+> Étudiant en Informatique & Cybersécurité
+
+[Accueil](index.md) | [Projets](projets.md) | [Certifications](certifications.md) | [Curriculum Vitae](cv.md)
 
 ---
 
-> Je suis passionné par **[Ton Domaine]**. Ce site regroupe mes travaux, mes certifications et mon parcours professionnel.
-
-## 🚀 Derniers Projets
-* **[Nom du Projet 1](./projets.md)** — Brève description du projet.
-* **[Nom du Projet 2](./projets.md)** — Brève description du projet.
-
-## 🎓 Certifications récentes
-* **Certification X** (2026) — [Voir le diplôme](./certifications.md)
+### À propos
+Je suis passionné par le développement d'infrastructures sécurisées et l'analyse de données. Ce portfolio regroupe mes travaux techniques et mes certifications professionnelles.
 
 ---
-© 2026 ShawnDeLaTV
+
+### Projets récents
+* **[Nom du Projet 1](./projets.md)**
+  Description technique concise de la solution apportée.
+* **[Nom du Projet 2](./projets.md)**
+  Analyse et déploiement d'un environnement sécurisé.
+
+---
+
+### Certifications
+* **Certification X** (2026) — [Consulter l'accréditation](./certifications.md)
+* **Certification Y** (2025) — [Détails de la formation](./certifications.md)
+
+---
+<p align="center">© 2026 ShawnDeLaTV</p>
