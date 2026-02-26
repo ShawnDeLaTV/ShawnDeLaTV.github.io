@@ -1,7 +1,3 @@
 title: ShawnDeLaTV
 description: "Étudiant | Portfolio & Blog"
-theme: jekyll-theme-minimal
-
-# Options pour le thème Minimal
-logo: "/assets/img/ma-photo.jpg" # Si tu veux ajouter une photo plus tard
-github_username: ShawnDeLaTV
+theme: jekyll-theme-architect
