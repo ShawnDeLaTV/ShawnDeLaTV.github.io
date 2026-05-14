@@ -46,21 +46,49 @@
     body { font-family: var(--font); color: var(--fg); background: var(--bg); overflow-x: hidden; line-height: 1.6; transition: background 0.4s ease, color 0.4s ease; }
     #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
 
-    nav { display: none; }
+    /* --- NOUVELLE NAVBAR GHOST --- */
+    nav { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      transition: transform 0.4s ease, background 0.3s ease, backdrop-filter 0.3s ease;
+    }
+    nav.scrolled {
+      background: rgba(3, 3, 5, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    html.light nav.scrolled { background: rgba(248, 249, 251, 0.5); }
+    nav.nav-hidden { transform: translateY(-100%); }
 
-    .nav-controls-fixed { position: fixed; top: 20px; right: 20px; z-index: 1100; background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border); padding: 6px; border-radius: 99px; display: flex; align-items: center; gap: 10px; }
+    .nav-links { display: flex; gap: 30px; }
+    .nav-links a { 
+      color: var(--muted); text-decoration: none; font-size: 11px; 
+      font-family: var(--mono); font-weight: 700; letter-spacing: 2px;
+      position: relative; padding: 10px 0; transition: 0.3s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
+      background: var(--accent); transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* CONTROLES */
+    .nav-controls-fixed { position: fixed; top: 25px; right: 25px; z-index: 1100; display: flex; align-items: center; gap: 15px; }
     .lang-selector { display: flex; background: var(--border); border-radius: 99px; padding: 2px; position: relative; cursor: pointer; }
-    .lang-option { padding: 4px 12px; font-family: var(--mono); font-size: 11px; font-weight: 800; color: var(--muted); position: relative; z-index: 2; transition: 0.3s; }
+    .lang-option { padding: 4px 10px; font-family: var(--mono); font-size: 10px; font-weight: 800; color: var(--muted); position: relative; z-index: 2; transition: 0.3s; }
     .lang-option.active { color: var(--bg); }
     .lang-pill { position: absolute; top: 2px; left: 2px; width: calc(50% - 2px); height: calc(100% - 4px); background: var(--fg); border-radius: 99px; z-index: 1; transition: 0.3s; }
     body.lang-en .lang-pill { transform: translateX(100%); }
 
-    .theme-switch { position: relative; width: 50px; height: 28px; background: var(--border); border-radius: 99px; cursor: pointer; display: flex; align-items: center; padding: 0 3px; }
-    .switch-handle { width: 22px; height: 22px; background: var(--fg); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.4s; }
-    body.light .theme-switch .switch-handle { transform: translateX(22px); }
-    .switch-handle svg { width: 13px; height: 13px; color: var(--bg); }
+    .theme-switch { position: relative; width: 44px; height: 24px; background: var(--border); border-radius: 99px; cursor: pointer; display: flex; align-items: center; padding: 0 3px; }
+    .switch-handle { width: 18px; height: 18px; background: var(--fg); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.4s; }
+    body.light .theme-switch .switch-handle { transform: translateX(20px); }
+    .switch-handle svg { width: 11px; height: 11px; color: var(--bg); }
 
-    header { max-width: var(--max); margin: 0 auto; padding: 100px 24px 60px; text-align: center; }
+    /* HEADER */
+    header { max-width: var(--max); margin: 0 auto; padding: 160px 24px 60px; text-align: center; }
     .profile-img { width: 130px; height: 130px; border-radius: 40px; border: 2px solid var(--accent); box-shadow: 0 0 30px var(--accent-glow); margin-bottom: 24px; animation: float 6s ease-in-out infinite; object-fit: cover; }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
     h1 { font-size: 56px; font-weight: 900; letter-spacing: -2px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -69,9 +97,10 @@
     .social-icon { width: 40px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--fg); transition: 0.3s; text-decoration: none; }
     .social-icon:hover { border-color: var(--accent); color: var(--accent); }
     
-    .cv-btn { display: inline-block; padding: 12px 28px; margin-top: 15px; background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 99px; color: var(--fg); text-decoration: none; font-family: var(--mono); font-weight: 700; font-size: 12px; letter-spacing: 1px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .cv-btn { display: inline-block; padding: 12px 28px; margin-top: 15px; background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 99px; color: var(--fg); text-decoration: none; font-family: var(--mono); font-weight: 700; font-size: 11px; letter-spacing: 1px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     .cv-btn:hover { border-color: var(--accent); color: var(--fg); transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(99, 102, 241, 0.1)); }
 
+    /* CONTENT SECTIONS */
     main { max-width: var(--max); margin: 0 auto; padding: 0 24px 0; }
     section { padding-top: 100px; }
     h2 { font-size: 18px; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); margin-bottom: 40px; display: flex; align-items: center; gap: 20px; font-weight: 800; }
@@ -101,24 +130,30 @@
 
     footer { margin-top: 100px; padding: 40px 24px; border-top: 1px solid var(--border); text-align: center; font-family: var(--mono); font-size: 12px; color: var(--muted); }
 
-    /* --- RESPONSIVE MOBILE --- */
     @media (max-width: 768px) {
-      header { padding: 60px 15px 40px; }
+      nav { height: 60px; }
+      .nav-links { gap: 15px; }
+      .nav-links a { font-size: 10px; }
+      header { padding: 120px 15px 40px; }
       h1 { font-size: 36px; }
       h2 { font-size: 15px; gap: 10px; }
-      .nav-controls-fixed { top: 10px; right: 10px; transform: scale(0.85); transform-origin: top right; }
+      .nav-controls-fixed { top: 15px; right: 15px; transform: scale(0.8); transform-origin: top right; }
       .grid { grid-template-columns: 1fr; gap: 16px; }
-      .skill-pill { margin-right: 15px; font-size: 13px; }
-      .timeline { padding-left: 25px; }
-      .timeline-item::before { left: -34px; width: 14px; height: 14px; }
-      #about-text { font-size: 16px; }
-      .cert-grid { grid-template-columns: 1fr; gap: 20px; }
     }
   </style>
 </head>
 <body class="lang-fr">
 
 <canvas id="bg-canvas"></canvas>
+
+<nav id="navbar">
+  <div class="nav-links">
+    <a href="#about" data-key="nav_about">À PROPOS</a>
+    <a href="#experience" data-key="nav_exp">PARCOURS</a>
+    <a href="#projects" data-key="nav_work">PROJETS</a>
+    <a href="#certifications" data-key="nav_certs">CERTIFICATIONS</a>
+  </div>
+</nav>
 
 <div class="nav-controls-fixed">
   <div class="lang-selector" id="lang-selector">
@@ -145,7 +180,7 @@
     <a href="https://github.com/ShawnDeLaTV" target="_blank" class="social-icon"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.385.6.082.818-.26.818-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 3.509 1.305 4.365.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
   </div>
   
-  <a href="CV_Matthieu_SONZOGNI.pdf" download class="cv-btn" data-key="btn_cv">RÉSUMÉ.PDF ↓</a>
+  <a href="CV_Matthieu_SONZOGNI.pdf" download class="cv-btn" data-key="btn_cv">TÉLÉCHARGER MON CV ↓</a>
 </header>
 
 <main>
@@ -182,13 +217,14 @@
 <script>
   const TRANSLATIONS = {
     fr: {
+      nav_about: "À PROPOS", nav_exp: "MON PARCOURS", nav_work: "MES PROJETS", nav_certs: "MES CERTIFICATIONS",
       sec_about: "Profil", sec_exp: "Expériences Professionnelles", sec_work: "Réalisations Techniques", sec_certs: "Certifications & Diplômes", sec_stack: "Expertise Technique",
-      btn_cv: "RÉSUMÉ.PDF ↓",
+      btn_cv: "TÉLÉCHARGER MON CV ↓",
       footer_text: "Designé & Développé par Matthieu Sonzogni avec l'aide de Gemini.",
       about_bio: "Futur ingénieur diplômé en août 2026, mon parcours est marqué par un double diplôme exigeant et une mobilité internationale qui a profondément enrichi ma vision technique et humaine. Cette expérience à l'étranger m'a permis de développer une grande adaptabilité et de confronter mes méthodes de travail à des standards globaux, renforçant ainsi ma capacité à évoluer dans des environnements complexes.<br><br>Je me spécialise aujourd'hui dans la protection des infrastructures sur Amazon Web Services. Au-delà des connaissances acquises lors de mes stages, j'approfondis constamment mon expertise à travers la réalisation de projets personnels concrets. Je maîtrise l'automatisation via Terraform pour bâtir des environnements immuables au sein de l'écosystème AWS, en mettant un accent particulier sur l'isolation des réseaux et la gestion rigoureuse des identités.<br><br>Mon objectif est de transformer les exigences de sécurité et de conformité en véritables leviers d'agilité pour les entreprises. Passionné par la défense des systèmes modernes, je m'oriente vers les métiers de l'ingénierie sécurité cloud et je suis activement à la recherche de mon premier défi professionnel pour septembre 2026.<br><br>J'espère que vous allez apprécier mon portfolio.",
       exp: [
-        { date: "MAI 2026 — AOÛT 2026", title: "Analyste Sécurité Cloud", co: "Banque de Développement du Canada (BDC)", desc: "• Cloud Hardening AWS/Azure.<br>• Gouvernance IAM & Moindre Privilège.<br>• Automatisation SecOps & Azure Sentinel." },
-        { date: "JUIN 2025 — AOÛT 2025", title: "Stagiaire Pentester", co: "BNP Paribas", desc: "• Audits Offensifs Web & API.<br>• Analyse de logique métier (Burp/ZAP).<br>• Support à la remédiation pour les développeurs." }
+        { date: "MAI 2026 — AOÛT 2026", title: "Analyste Sécurité Cloud & SSDLC - Stage", co: "Banque de Développement du Canada (BDC)", desc: "[A venir]" },
+        { date: "JUIN 2025 — AOÛT 2025", title: "Pentester - Stage", co: "BNP Paribas", desc: "<b>• Audits Offensifs (Web & API) :</b> Réalisation de tests d’intrusion sur des applications bancaires en environnement de qualification pour identifier des failles critiques.<br><b>• Analyse de Logique Métier :</b> Détection de vulnérabilités via des tests manuels et automatisés (Burp Suite, OWASP ZAP) visant les flux de données sensibles.<br><b>• Expertise Conseil & Remédiation :</b> Accompagnement technique des équipes de développement pour l'implémentation de correctifs de sécurité et le renforcement du code.<br><b>• Validation de Sécurité :</b> Réalisation de contre-audits systématiques pour certifier la résolution effective des failles avant la mise en production des services.<br>" }
       ],
       projects: [
         { title: "Architecture AWS Zero Trust", desc: "Infrastructure Multi-AZ isolée via Terraform. Sécurisation via ALB/CloudFront.", url: "projects/p-architecture-zero-trust.html", tags: ["Terraform", "Security"], image: "images/p-architecture-zero-trust.png" },
@@ -202,8 +238,9 @@
       ]
     },
     en: {
+      nav_about: "ABOUT", nav_exp: "JOURNEY", nav_work: "PROJECTS", nav_certs: "CERTS",
       sec_about: "Profile", sec_exp: "Professional Experience", sec_work: "Technical Projects", sec_certs: "Certifications & Education", sec_stack: "Technical Expertise",
-      btn_cv: "RESUME.PDF ↓",
+      btn_cv: "DOWNLOAD RESUME ↓",
       footer_text: "Designed & Developed by Matthieu Sonzogni with Gemini's help.",
       about_bio: "Future Graduate Engineer (2026), focusing on Cloud Architecture and Cybersecurity. My international experience and double degree have enriched my technical vision. I specialize in AWS protection, mastering Terraform for immutable and secure environments.",
       exp: [
@@ -263,6 +300,25 @@
 
   window.addEventListener('load', init);
 
+  /* SCRIPT SCROLL NAVBAR */
+  let lastScrollTop = 0;
+  window.addEventListener("scroll", function() {
+    let st = window.pageYOffset || document.documentElement.scrollTop;
+    let navbar = document.getElementById("navbar");
+    
+    // Effet apparition fond au scroll
+    if (st > 50) navbar.classList.add("scrolled");
+    else navbar.classList.remove("scrolled");
+
+    // Disparition au scroll vers le bas / Apparition vers le haut
+    if (st > lastScrollTop && st > 100) {
+      navbar.classList.add("nav-hidden");
+    } else {
+      navbar.classList.remove("nav-hidden");
+    }
+    lastScrollTop = st <= 0 ? 0 : st;
+  }, false);
+
   const canvas = document.getElementById('bg-canvas');
   const ctx = canvas.getContext('2d');
   let pArr = [];
@@ -270,8 +326,6 @@
     canvas.width = window.innerWidth; canvas.height = window.innerHeight; pArr = [];
     const isLight = document.documentElement.classList.contains('light');
     const color = isLight ? '124, 58, 237' : '168, 85, 247';
-    
-    // Performance : moins de points sur mobile
     const count = window.innerWidth < 768 ? 300 : 800;
     for (let i = 0; i < count; i++) {
       pArr.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*1.2+0.3, speedX: (Math.random()-0.5)*0.3, speedY: (Math.random()-0.5)*0.3, color: `rgba(${color}, ${Math.random()*0.4+0.1})`});
