@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture Zero Trust — Matthieu Sonzogni</title>
+  
+  <!-- SCRIPT ANTI-FLASH UNIFIÉ -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('pref-theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.add('light');
+      }
+      const savedLang = localStorage.getItem('pref-lang') || 'fr';
+      document.documentElement.setAttribute('lang', savedLang);
+    })();
+  </script>
+
+  <style>
+    :root {
+      --max: 850px;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --bg: #030305;
+      --surface: rgba(13, 13, 18, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --fg: #ffffff;
+      --muted: #a1a1aa;
+      --accent: #a855f7;
+      --accent-glow: rgba(168, 85, 247, 0.4);
+      --grad: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+    }
+
+    /* UNIFICATION DES SELECTEURS DE THEME */
+    html.light body, body.light {
+      --bg: #f8f9fb;
+      --surface: rgba(255, 255, 255, 0.85);
+      --border: rgba(0, 0, 0, 0.08);
+      --fg: #18181b;
+      --muted: #52525b;
+      --accent: #7c3aed;
+      --accent-glow: rgba(124, 58, 237, 0.2);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--fg); background: var(--bg); overflow-x: hidden; line-height: 1.6; transition: background 0.4s ease; }
+    #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+
+    /* ── BOUTON RETOUR ── */
+    .back-btn {
+      position: fixed; top: 20px; left: 20px; z-index: 1100;
+      background: var(--surface); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); padding: 8px 18px; border-radius: 99px;
+      color: var(--fg); text-decoration: none; font-family: var(--mono);
+      font-size: 12px; font-weight: 800; transition: 0.3s;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .back-btn:hover { border-color: var(--accent); transform: translateX(-4px); }
+
+    /* ── NAVBAR ── */
+    nav#navbar {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 1000; width: fit-content;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    }
+    nav.nav-hidden { transform: translate(-50%, -100px); opacity: 0; }
+    .nav-content {
+      background: var(--surface); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); padding: 6px 10px; border-radius: 99px;
+      display: flex; gap: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .nav-content a {
+      color: var(--muted); text-decoration: none; font-size: 13px;
+      padding: 8px 16px; transition: 0.3s; font-family: var(--mono); border-radius: 99px;
+    }
+    .nav-content a:hover { color: var(--fg); background: var(--border); }
+
+    /* ── CONTROLES ── */
+    .nav-controls-fixed {
+      position: fixed; top: 20px; right: 20px; z-index: 1100;
+      background: var(--surface); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); padding: 6px; border-radius: 99px;
+      display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .lang-selector {
+      display: flex; background: var(--border); border-radius: 99px;
+      padding: 2px; position: relative; cursor: pointer; user-select: none;
+    }
+    .lang-option {
+      padding: 4px 12px; font-family: var(--mono); font-size: 11px;
+      font-weight: 800; color: var(--muted); position: relative; z-index: 2; transition: 0.3s;
+    }
+    .lang-option.active { color: var(--bg); }
+    .lang-pill {
+      position: absolute; top: 2px; left: 2px; width: calc(50% - 2px); height: calc(100% - 4px);
+      background: var(--fg); border-radius: 99px; z-index: 1;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    body.lang-en .lang-pill { transform: translateX(100%); }
+
+    .theme-switch {
+      position: relative; width: 50px; height: 28px; background: var(--border);
+      border-radius: 99px; cursor: pointer; display: flex; align-items: center; padding: 0 3px;
+    }
+    .switch-handle {
+      width: 22px; height: 22px; background: var(--fg); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    body.light .theme-switch .switch-handle { transform: translateX(22px); }
+    .switch-handle svg { width: 13px; height: 13px; color: var(--bg); }
+
+    /* ── CONTENU ── */
+    main { max-width: var(--max); margin: 0 auto; padding: 140px 24px 100px; }
+    .category-tag { font-size: 12px; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); margin-bottom: 10px; display: block; font-weight: 700; }
+    h1 { font-size: 48px; font-weight: 900; letter-spacing: -2px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; }
+    .glass { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 32px; backdrop-filter: blur(10px); margin-bottom: 30px; }
+    .hero-img { width: 100%; border-radius: 24px; border: 1px solid var(--border); margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+
+    /* Coloration Code */
+    pre { background: #0d0d12; padding: 24px; border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; font-family: var(--mono); font-size: 14px; margin: 20px 0; }
+    .k { color: #f472b6; } .s { color: #34d399; } .c { color: #52525b; font-style: italic; } .r { color: #60a5fa; }
+
+    @media (max-width: 650px) { h1 { font-size: 32px; } .back-btn { padding: 8px 12px; } .nav-links { display: none; } }
+  </style>
+</head>
+<body class="lang-fr">
+
+<canvas id="bg-canvas"></canvas>
+
+<a href="../index.html" class="back-btn" data-key="btn_back">← RETOUR</a>
+
+<nav id="navbar">
+  <div class="nav-content">
+    <a href="../index.html#projects" data-key="nav_projects">Projets</a>
+    <a href="../index.html#experience" data-key="nav_exp">Parcours</a>
+  </div>
+</nav>
+
+<div class="nav-controls-fixed">
+  <div class="lang-selector" id="lang-selector">
+    <div class="lang-pill"></div>
+    <div class="lang-option active" id="opt-fr">FR</div>
+    <div class="lang-option" id="opt-en">EN</div>
+  </div>
+
+  <div class="theme-switch" id="theme-toggle">
+    <div class="switch-handle">
+      <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path id="theme-path" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<main>
+  <span class="category-tag" data-key="category">SÉCURITÉ CLOUD</span>
+  <h1 data-key="title">Architecture Zero Trust (AWS)</h1>
+
+  <img src="../images/p-architecture-zero-trust.png" class="hero-img" alt="Hero Architecture">
+
+  <div class="glass">
+    <h2 data-key="sec_context">Contexte</h2>
+    <p data-key="desc">Architecture multi-tiers isolée pilotée par Terraform. Sécurisation via ALB et CloudFront, minimisant la surface d'attaque externe.</p>
+  </div>
+
+  <h2 data-key="sec_code">Infrastructure as Code</h2>
+  <pre><code><span class="c"># Exemple de règle de Security Group</span>
+<span class="k">resource</span> <span class="r">"aws_security_group"</span> <span class="s">"app"</span> {
+  <span class="k">name</span> = <span class="s">"app-sg-secure"</span>
+  <span class="k">ingress</span> {
+    <span class="k">from_port</span> = <span class="s">443</span>
+    <span class="k">protocol</span>  = <span class="s">"tcp"</span>
+  }
+}</code></pre>
+</main>
+
+<script>
+  const TRANSLATIONS = {
+    fr: {
+      btn_back: "← RETOUR", nav_projects: "Projets", nav_exp: "Parcours",
+      category: "SÉCURITÉ CLOUD", title: "Architecture Zero Trust (AWS)",
+      sec_context: "Contexte", sec_code: "Infrastructure as Code",
+      desc: "Architecture multi-tiers isolée pilotée par Terraform. Sécurisation via ALB et CloudFront, minimisant la surface d'attaque externe."
+    },
+    en: {
+      btn_back: "← BACK", nav_projects: "Projects", nav_exp: "Timeline",
+      category: "CLOUD SECURITY", title: "Zero Trust Architecture (AWS)",
+      sec_context: "Context", sec_code: "Infrastructure as Code",
+      desc: "Isolated multi-tier architecture driven by Terraform. Secured via ALB and CloudFront, minimizing the external attack surface."
+    }
+  };
+
+  // --- LOGIQUE ÉTAT (UNIFIÉE AVEC L'INDEX) ---
+  function applyLanguage(lang) {
+    localStorage.setItem('pref-lang', lang);
+    const isEn = (lang === 'en');
+    document.body.classList.toggle('lang-en', isEn);
+    document.getElementById('opt-en').classList.toggle('active', isEn);
+    document.getElementById('opt-fr').classList.toggle('active', !isEn);
+    
+    document.querySelectorAll('[data-key]').forEach(el => {
+      el.textContent = TRANSLATIONS[lang][el.getAttribute('data-key')];
+    });
+  }
+
+  function applyTheme(isLight) {
+    if (isLight) {
+      document.body.classList.add('light');
+      document.documentElement.classList.add('light');
+      localStorage.setItem('pref-theme', 'light');
+    } else {
+      document.body.classList.remove('light');
+      document.documentElement.classList.remove('light');
+      localStorage.setItem('pref-theme', 'dark');
+    }
+    
+    document.getElementById('theme-path').setAttribute('d', isLight ? 
+      "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" : 
+      "M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"
+    );
+    if(window.initCanvas) initCanvas();
+  }
+
+  // --- LISTENERS ROBUSTES ---
+  document.getElementById('lang-selector').addEventListener('click', () => {
+    const nextLang = document.body.classList.contains('lang-en') ? 'fr' : 'en';
+    applyLanguage(nextLang);
+  });
+
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const isNowLight = !document.body.classList.contains('light');
+    applyTheme(isNowLight);
+  });
+
+  // --- INITIALISATION ---
+  window.addEventListener('DOMContentLoaded', () => {
+    applyLanguage(localStorage.getItem('pref-lang') || 'fr');
+    // On check la classe light sur HTML ou le localStorage
+    const isLightInitial = localStorage.getItem('pref-theme') === 'light' || document.documentElement.classList.contains('light');
+    applyTheme(isLightInitial);
+    initCanvas();
+    animate();
+  });
+
+  // --- SCROLL & PARTICULES ---
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > lastY && window.scrollY > 150) nav.classList.add('nav-hidden');
+    else nav.classList.remove('nav-hidden');
+    lastY = window.scrollY;
+  });
+
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let pArr = [];
+  window.initCanvas = function() {
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight; pArr = [];
+    const color = document.body.classList.contains('light') ? '124, 58, 237' : '168, 85, 247';
+    for(let i=0; i<85; i++) pArr.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, sX:Math.random()-0.5, sY:Math.random()-0.5, size: Math.random()*1.5, c:`rgba(${color},${Math.random()*0.3})`});
+  }
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pArr.forEach(i => { i.x+=i.sX; i.y+=i.sY; if(i.x<0||i.x>canvas.width)i.sX*=-1; if(i.y<0||i.y>canvas.height)i.sY*=-1; ctx.fillStyle=i.c; ctx.beginPath(); ctx.arc(i.x,i.y,i.size,0,Math.PI*2); ctx.fill(); });
+    requestAnimationFrame(animate);
+  }
+  window.addEventListener('resize', initCanvas);
+</script>
+</body>
+</html>
