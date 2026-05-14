@@ -5,142 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Matthieu Sonzogni — Portfolio | Cloud Security Engineer</title>
   
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Inline script anti-flash obligatoire ici -->
   <script>
     (function() {
-      const savedTheme = localStorage.getItem('pref-theme');
-      if (savedTheme === 'light') {
-        document.documentElement.classList.add('light');
-      }
+      const savedTheme = localStorage.getItem('pref-theme') || 'dark';
+      if (savedTheme === 'light') document.documentElement.classList.add('light');
       const savedLang = localStorage.getItem('pref-lang') || 'fr';
       document.documentElement.setAttribute('lang', savedLang);
     })();
   </script>
-
-  <style>
-    :root {
-      --max: 850px;
-      --font: 'Inter', system-ui, -apple-system, sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-      --bg: #030305;
-      --surface: rgba(13, 13, 18, 0.7);
-      --border: rgba(255, 255, 255, 0.08);
-      --fg: #ffffff;
-      --muted: #cccccc;
-      --accent: #a855f7;
-      --accent-glow: rgba(168, 85, 247, 0.4);
-      --grad: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
-    }
-
-    html.light body, body.light {
-      --bg: #f8f9fb;
-      --surface: rgba(255, 255, 255, 0.85);
-      --border: rgba(0, 0, 0, 0.08);
-      --fg: #000000;
-      --muted: #333333;
-      --accent: #7c3aed;
-      --accent-glow: rgba(124, 58, 237, 0.2);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: var(--font); color: var(--fg); background: var(--bg); overflow-x: hidden; line-height: 1.6; transition: background 0.4s ease, color 0.4s ease; }
-    #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
-
-    /* --- NOUVELLE NAVBAR GHOST --- */
-    nav { 
-      position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-      z-index: 1000; display: flex; align-items: center; justify-content: center;
-      transition: transform 0.4s ease, background 0.3s ease, backdrop-filter 0.3s ease;
-    }
-    nav.scrolled {
-      background: rgba(3, 3, 5, 0.5);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-    }
-    html.light nav.scrolled { background: rgba(248, 249, 251, 0.5); }
-    nav.nav-hidden { transform: translateY(-100%); }
-
-    .nav-links { display: flex; gap: 30px; }
-    .nav-links a { 
-      color: var(--muted); text-decoration: none; font-size: 11px; 
-      font-family: var(--mono); font-weight: 700; letter-spacing: 2px;
-      position: relative; padding: 10px 0; transition: 0.3s;
-    }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
-      background: var(--accent); transition: width 0.3s ease;
-    }
-    .nav-links a:hover { color: var(--fg); }
-    .nav-links a:hover::after { width: 100%; }
-
-    /* CONTROLES */
-    .nav-controls-fixed { position: fixed; top: 25px; right: 25px; z-index: 1100; display: flex; align-items: center; gap: 15px; }
-    .lang-selector { display: flex; background: var(--border); border-radius: 99px; padding: 2px; position: relative; cursor: pointer; }
-    .lang-option { padding: 4px 10px; font-family: var(--mono); font-size: 10px; font-weight: 800; color: var(--muted); position: relative; z-index: 2; transition: 0.3s; }
-    .lang-option.active { color: var(--bg); }
-    .lang-pill { position: absolute; top: 2px; left: 2px; width: calc(50% - 2px); height: calc(100% - 4px); background: var(--fg); border-radius: 99px; z-index: 1; transition: 0.3s; }
-    body.lang-en .lang-pill { transform: translateX(100%); }
-
-    .theme-switch { position: relative; width: 44px; height: 24px; background: var(--border); border-radius: 99px; cursor: pointer; display: flex; align-items: center; padding: 0 3px; }
-    .switch-handle { width: 18px; height: 18px; background: var(--fg); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.4s; }
-    body.light .theme-switch .switch-handle { transform: translateX(20px); }
-    .switch-handle svg { width: 11px; height: 11px; color: var(--bg); }
-
-    /* HEADER */
-    header { max-width: var(--max); margin: 0 auto; padding: 160px 24px 60px; text-align: center; }
-    .profile-img { width: 130px; height: 130px; border-radius: 40px; border: 2px solid var(--accent); box-shadow: 0 0 30px var(--accent-glow); margin-bottom: 24px; animation: float 6s ease-in-out infinite; object-fit: cover; }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-    h1 { font-size: 56px; font-weight: 900; letter-spacing: -2px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-    .social-links { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
-    .social-icon { width: 40px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--fg); transition: 0.3s; text-decoration: none; }
-    .social-icon:hover { border-color: var(--accent); color: var(--accent); }
-    
-    .cv-btn { display: inline-block; padding: 12px 28px; margin-top: 15px; background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 99px; color: var(--fg); text-decoration: none; font-family: var(--mono); font-weight: 700; font-size: 11px; letter-spacing: 1px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    .cv-btn:hover { border-color: var(--accent); color: var(--fg); transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(99, 102, 241, 0.1)); }
-
-    /* CONTENT SECTIONS */
-    main { max-width: var(--max); margin: 0 auto; padding: 0 24px 0; }
-    section { padding-top: 100px; }
-    h2 { font-size: 18px; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); margin-bottom: 40px; display: flex; align-items: center; gap: 20px; font-weight: 800; }
-    h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-    
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .proj-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; transition: 0.3s ease; text-decoration: none; color: inherit; display: block; backdrop-filter: blur(10px); }
-    .proj-card:hover { border-color: var(--accent); transform: translateY(-5px); }
-    .proj-img { width: 100%; height: 180px; background-size: cover; background-position: center; opacity: 0.8; }
-    .proj-content { padding: 24px; }
-
-    .timeline { position: relative; padding-left: 35px; border-left: 2px solid var(--border); margin-left: 10px; }
-    .timeline-item { position: relative; margin-bottom: 50px; }
-    .timeline-item::before { content: ''; position: absolute; left: -44px; top: 0; width: 16px; height: 16px; background: var(--bg); border: 3px solid var(--accent); border-radius: 50%; }
-
-    .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
-    .cert-card { display: flex; align-items: center; gap: 15px; color: var(--fg); }
-    .cert-card img { width: 45px; height: 45px; object-fit: contain; }
-
-    .stack-category { margin-bottom: 35px; }
-    .stack-title { font-family: var(--mono); font-size: 13px; color: var(--fg); font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
-    .stack-title::before { content: ''; width: 8px; height: 8px; background: var(--accent); border-radius: 2px; }
-    
-    .skill-pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 0; margin-right: 30px; font-family: var(--mono); color: var(--muted); font-size: 14px; transition: 0.3s; }
-    .skill-pill img { width: 20px; height: 20px; object-fit: contain; transition: 0.3s ease; }
-    .skill-pill:hover { color: var(--fg); transform: translateX(5px); }
-
-    footer { margin-top: 100px; padding: 40px 24px; border-top: 1px solid var(--border); text-align: center; font-family: var(--mono); font-size: 12px; color: var(--muted); }
-
-    @media (max-width: 768px) {
-      nav { height: 60px; }
-      .nav-links { gap: 15px; }
-      .nav-links a { font-size: 10px; }
-      header { padding: 120px 15px 40px; }
-      h1 { font-size: 36px; }
-      h2 { font-size: 15px; gap: 10px; }
-      .nav-controls-fixed { top: 15px; right: 15px; transform: scale(0.8); transform-origin: top right; }
-      .grid { grid-template-columns: 1fr; gap: 16px; }
-    }
-  </style>
 </head>
 <body class="lang-fr">
 
@@ -176,8 +51,18 @@
   <p style="font-family: var(--mono); font-size: 14px; letter-spacing: 3px; color: var(--accent); margin-top: 10px;">[ CLOUD SECURITY ENGINEER ]</p>
   
   <div class="social-links">
-    <a href="https://linkedin.com/in/matthieu-sonzogni/" target="_blank" class="social-icon"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
-    <a href="https://github.com/ShawnDeLaTV" target="_blank" class="social-icon"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.385.6.082.818-.26.818-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 3.509 1.305 4.365.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
+    <!-- LinkedIn -->
+    <a href="https://linkedin.com/in/matthieu-sonzogni/" target="_blank" class="social-icon">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+      </svg>
+    </a>
+    <!-- GitHub -->
+    <a href="https://github.com/ShawnDeLaTV" target="_blank" class="social-icon">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.385.6.082.818-.26.818-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 3.509 1.305 4.365.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"/>
+      </svg>
+    </a>
   </div>
   
   <a href="CV_Matthieu_SONZOGNI.pdf" download class="cv-btn" data-key="btn_cv">TÉLÉCHARGER MON CV ↓</a>
@@ -186,157 +71,16 @@
 <main>
   <section id="about">
     <h2 data-key="sec_about">À propos</h2>
-    <p id="about-text" style="color: var(--fg); font-size: 18px; line-height: 1.8;"></p>
+    <p id="about-text"></p>
   </section>
-
-  <section id="experience">
-    <h2 data-key="sec_exp">Expériences</h2>
-    <div class="timeline" id="exp-box"></div>
-  </section>
-
-  <section id="projects">
-    <h2 data-key="sec_work">Projets à impact</h2>
-    <div class="grid" id="proj-box"></div>
-  </section>
-
-  <section id="certifications">
-    <h2 data-key="sec_certs">Certifications</h2>
-    <div class="cert-grid" id="cert-box"></div>
-  </section>
-
-  <section id="skills">
-    <h2 data-key="sec_stack">Expertise Technique</h2>
-    <div id="skill-box"></div>
-  </section>
-
-  <footer>
-    <div class="footer-content" data-key="footer_text">Designé & Développé par Matthieu Sonzogni avec l'aide de Gemini.</div>
-  </footer>
+  <section id="projects"><h2 data-key="sec_work">Projets à impact</h2><div class="grid" id="proj-box"></div></section>
+  <section id="experience"><h2 data-key="sec_exp">Expériences</h2><div class="timeline" id="exp-box"></div></section>
+  <section id="certifications"><h2 data-key="sec_certs">Certifications</h2><div class="cert-grid" id="cert-box"></div></section>
+  <section id="skills"><h2 data-key="sec_stack">Expertise Technique</h2><div id="skill-box"></div></section>
+  <footer><div class="footer-content" data-key="footer_text">...</div></footer>
 </main>
 
-<script>
-  const TRANSLATIONS = {
-    fr: {
-      nav_about: "À PROPOS", nav_exp: "MON PARCOURS", nav_work: "MES PROJETS", nav_certs: "MES CERTIFICATIONS",
-      sec_about: "Profil", sec_exp: "Expériences Professionnelles", sec_work: "Réalisations Techniques", sec_certs: "Certifications & Diplômes", sec_stack: "Expertise Technique",
-      btn_cv: "TÉLÉCHARGER MON CV ↓",
-      footer_text: "Designé & Développé par Matthieu Sonzogni avec l'aide de Gemini.",
-      about_bio: "Futur ingénieur diplômé en août 2026, mon parcours est marqué par un double diplôme exigeant et une mobilité internationale qui a profondément enrichi ma vision technique et humaine. Cette expérience à l'étranger m'a permis de développer une grande adaptabilité et de confronter mes méthodes de travail à des standards globaux, renforçant ainsi ma capacité à évoluer dans des environnements complexes.<br><br>Je me spécialise aujourd'hui dans la protection des infrastructures sur Amazon Web Services. Au-delà des connaissances acquises lors de mes stages, j'approfondis constamment mon expertise à travers la réalisation de projets personnels concrets. Je maîtrise l'automatisation via Terraform pour bâtir des environnements immuables au sein de l'écosystème AWS, en mettant un accent particulier sur l'isolation des réseaux et la gestion rigoureuse des identités.<br><br>Mon objectif est de transformer les exigences de sécurité et de conformité en véritables leviers d'agilité pour les entreprises. Passionné par la défense des systèmes modernes, je m'oriente vers les métiers de l'ingénierie sécurité cloud et je suis activement à la recherche de mon premier défi professionnel pour septembre 2026.<br><br>J'espère que vous allez apprécier mon portfolio.",
-      exp: [
-        { date: "MAI 2026 — AOÛT 2026", title: "Analyste Sécurité Cloud & SSDLC - Stage", co: "Banque de Développement du Canada (BDC)", desc: "[A venir]" },
-        { date: "JUIN 2025 — AOÛT 2025", title: "Pentester - Stage", co: "BNP Paribas", desc: "<b>• Audits Offensifs (Web & API) :</b> Réalisation de tests d’intrusion sur des applications bancaires en environnement de qualification pour identifier des failles critiques.<br><b>• Analyse de Logique Métier :</b> Détection de vulnérabilités via des tests manuels et automatisés (Burp Suite, OWASP ZAP) visant les flux de données sensibles.<br><b>• Expertise Conseil & Remédiation :</b> Accompagnement technique des équipes de développement pour l'implémentation de correctifs de sécurité et le renforcement du code.<br><b>• Validation de Sécurité :</b> Réalisation de contre-audits systématiques pour certifier la résolution effective des failles avant la mise en production des services.<br>" }
-      ],
-      projects: [
-        { title: "Architecture AWS Zero Trust", desc: "Infrastructure Multi-AZ isolée via Terraform. Sécurisation via ALB/CloudFront.", url: "projects/p-architecture-zero-trust.html", tags: ["Terraform", "Security"], image: "images/p-architecture-zero-trust.png" },
-        { title: "SSO & IAM avec Authelia", desc: "Centralisation via OIDC et LLDAP. Implémentation du MFA.", url: "#", tags: ["Docker", "MFA"], image: "images/sso.png" },
-        { title: "Hybrid AD Azure Hardening", desc: "Contrôleur Azure. Hardening système via GPO.", url: "#", tags: ["Azure", "AD"], image: "images/ad.png" }
-      ],
-      certs: [
-        { name: "AWS Solutions Architect", date: "Associate", img: "images/certifications/AWSSAA.png" },
-        { name: "HashiCorp Terraform", date: "Associate (Préparation)", img: "images/certifications/TFA.png" },
-        { name: "TOEIC Anglais", date: "Niveau B2", img: "images/certifications/TOEIC.png" }
-      ]
-    },
-    en: {
-      nav_about: "ABOUT", nav_exp: "JOURNEY", nav_work: "PROJECTS", nav_certs: "CERTS",
-      sec_about: "Profile", sec_exp: "Professional Experience", sec_work: "Technical Projects", sec_certs: "Certifications & Education", sec_stack: "Technical Expertise",
-      btn_cv: "DOWNLOAD RESUME ↓",
-      footer_text: "Designed & Developed by Matthieu Sonzogni with Gemini's help.",
-      about_bio: "Future Graduate Engineer (2026), focusing on Cloud Architecture and Cybersecurity. My international experience and double degree have enriched my technical vision. I specialize in AWS protection, mastering Terraform for immutable and secure environments.",
-      exp: [
-        { date: "MAY 2026 — AUG 2026", title: "Cloud Security Analyst", co: "BDC", desc: "• AWS/Azure Hardening.<br>• IAM Governance.<br>• SecOps Automation." },
-        { date: "JUNE 2025 — AUG 2025", title: "Pentester Intern", co: "BNP Paribas", desc: "• Web & API Pentesting.<br>• Business Logic Analysis.<br>• Remediation Advisory." }
-      ],
-      projects: [
-        { title: "AWS Zero Trust Architecture", desc: "Multi-AZ Terraform infrastructure. Flow securing.", url: "projects/p-architecture-zero-trust.html", tags: ["Terraform", "Security"], image: "images/p-architecture-zero-trust.png" },
-        { title: "SSO & IAM with Authelia", desc: "OIDC centralization and MFA enforcement.", url: "#", tags: ["Docker", "MFA"], image: "images/sso.png" },
-        { title: "Hybrid AD Azure Hardening", desc: "Azure Domain Controller provisioning & hardening.", url: "#", tags: ["Azure", "AD"], image: "images/ad.png" }
-      ],
-      certs: [
-        { name: "AWS Solutions Architect", date: "Associate", img: "images/certifications/AWSSAA.png" },
-        { name: "HashiCorp Terraform", date: "Associate (In progress)", img: "images/certifications/TFA.png" }
-      ]
-    }
-  };
-
-  const STACK_DATA = [
-    { cat: "Cloud & Infra", items: [{ name: "AWS", icon: "images/logo/aws.png" }, { name: "Azure", icon: "images/logo/azure.png" }, { name: "Terraform", icon: "images/logo/terraform.png" }] },
-    { cat: "Sécurité & Défense", items: [{ name: "Burp Suite", icon: "https://cdn.simpleicons.org/burpsuite/white" }, { name: "Sentinel", icon: "https://raw.githubusercontent.com/Fortra/sentinel-icons/main/icons/Microsoft-Sentinel.svg" }] },
-    { cat: "Automation & DevOps", items: [{ name: "Python", icon: "https://cdn.simpleicons.org/python/white" }, { name: "Java", icon: "images/logo/java.png" }, { name: "C", icon: "images/logo/c.png" }, { name: "Bash", icon: "https://cdn.simpleicons.org/gnubash/white" }, { name: "Docker", icon: "https://cdn.simpleicons.org/docker/white" }, { name: "GitHub", icon: "https://cdn.simpleicons.org/githubactions/white" }] }
-  ];
-
-  function applyLanguage(lang) {
-    localStorage.setItem('pref-lang', lang);
-    document.body.classList.toggle('lang-en', lang === 'en');
-    document.getElementById('opt-en').classList.toggle('active', lang === 'en');
-    document.getElementById('opt-fr').classList.toggle('active', lang === 'fr');
-    const t = TRANSLATIONS[lang];
-    document.querySelectorAll('[data-key]').forEach(el => { if(t[el.getAttribute('data-key')]) el.textContent = t[el.getAttribute('data-key')]; });
-    document.getElementById('about-text').innerHTML = t.about_bio;
-    document.getElementById('exp-box').innerHTML = t.exp.map(e => `<div class="timeline-item"><div style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${e.date}</div><div style="font-size:20px;font-weight:700;color:var(--fg)">${e.title}</div><div style="font-size:15px;color:var(--accent);font-weight:600">${e.co}</div><p style="font-size:15px;color:var(--muted);margin-top:10px">${e.desc}</p></div>`).join('');
-    document.getElementById('proj-box').innerHTML = t.projects.map(p => `<a href="${p.url}" class="proj-card"><div class="proj-img" style="background-image:url('${p.image}')"></div><div class="proj-content"><h3 style="font-size:18px;color:var(--fg)">${p.title}</h3><p style="color:var(--muted); font-size:13px; margin: 10px 0 16px 0">${p.desc}</p><div>${p.tags.map(t => `<span style="color:var(--accent); font-family:var(--mono); font-size:10px; font-weight:700; margin-right:8px">#${t}</span>`).join('')}</div></div></a>`).join('');
-    document.getElementById('cert-box').innerHTML = t.certs.map(c => `<div class="cert-card"><img src="${c.img}" alt="${c.name}"><div style="color:var(--fg)"><div style="font-size:16px;font-weight:700">${c.name}</div><div style="font-size:12px;color:var(--muted);font-family:var(--mono)">${c.date}</div></div></div>`).join('');
-    document.getElementById('skill-box').innerHTML = STACK_DATA.map(cat => `<div class="stack-category"><div class="stack-title">${cat.cat}</div>${cat.items.map(item => `<div class="skill-pill"><img src="${item.icon}" alt="${item.name}">${item.name}</div>`).join('')}</div>`).join('');
-  }
-
-  function applyTheme(theme) {
-    const isLight = (theme === 'light');
-    if (isLight) { document.documentElement.classList.add('light'); document.body.classList.add('light'); } 
-    else { document.documentElement.classList.remove('light'); document.body.classList.remove('light'); }
-    localStorage.setItem('pref-theme', theme);
-    const themePath = document.getElementById('theme-path');
-    if (themePath) themePath.setAttribute('d', isLight ? "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" : "M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z");
-    initCanvas();
-  }
-
-  document.getElementById('theme-toggle').addEventListener('click', () => applyTheme(document.documentElement.classList.contains('light') ? 'dark' : 'light'));
-  document.getElementById('lang-selector').addEventListener('click', () => applyLanguage(document.body.classList.contains('lang-en') ? 'fr' : 'en'));
-
-  function init() {
-    applyTheme(localStorage.getItem('pref-theme') || 'dark');
-    applyLanguage(localStorage.getItem('pref-lang') || 'fr');
-    animate();
-  }
-
-  window.addEventListener('load', init);
-
-  /* SCRIPT SCROLL NAVBAR */
-  let lastScrollTop = 0;
-  window.addEventListener("scroll", function() {
-    let st = window.pageYOffset || document.documentElement.scrollTop;
-    let navbar = document.getElementById("navbar");
-    
-    // Effet apparition fond au scroll
-    if (st > 50) navbar.classList.add("scrolled");
-    else navbar.classList.remove("scrolled");
-
-    // Disparition au scroll vers le bas / Apparition vers le haut
-    if (st > lastScrollTop && st > 100) {
-      navbar.classList.add("nav-hidden");
-    } else {
-      navbar.classList.remove("nav-hidden");
-    }
-    lastScrollTop = st <= 0 ? 0 : st;
-  }, false);
-
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let pArr = [];
-  window.initCanvas = function() {
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight; pArr = [];
-    const isLight = document.documentElement.classList.contains('light');
-    const color = isLight ? '124, 58, 237' : '168, 85, 247';
-    const count = window.innerWidth < 768 ? 300 : 800;
-    for (let i = 0; i < count; i++) {
-      pArr.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*1.2+0.3, speedX: (Math.random()-0.5)*0.3, speedY: (Math.random()-0.5)*0.3, color: `rgba(${color}, ${Math.random()*0.4+0.1})`});
-    }
-  }
-  function animate() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    pArr.forEach(p => { p.x+=p.speedX; p.y+=p.speedY; if(p.x>canvas.width)p.x=0; if(p.x<0)p.x=canvas.width; if(p.y>canvas.height)p.y=0; if(p.y<0)p.y=canvas.height; ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); });
-    requestAnimationFrame(animate);
-  }
-  window.addEventListener('resize', initCanvas);
-</script>
+<script src="config.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
