@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IAM Privilege Escalation Scanner — Matthieu Sonzogni</title>
+  <link rel="stylesheet" href="style.css">
+
+  
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('pref-theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.add('light');
+      }
+      const savedLang = localStorage.getItem('pref-lang') || 'fr';
+      document.documentElement.setAttribute('lang', savedLang);
+    })();
+  </script>
+
+
+</head>
+<body class="lang-fr">
+
+<canvas id="bg-canvas"></canvas>
+
+<nav id="navbar">
+  <div class="nav-links">
+    <a href="../index.html#about" data-key="nav_about">À PROPOS</a>
+    <a href="../index.html#experience" data-key="nav_exp">PARCOURS</a>
+    <a href="../index.html#projects" data-key="nav_work">PROJETS</a>
+    <a href="../index.html#certifications" data-key="nav_certs">CERTIFICATIONS</a>
+  </div>
+</nav>
+
+<div class="nav-controls-fixed">
+  <div class="lang-selector" id="lang-selector">
+    <div class="lang-pill"></div>
+    <div class="lang-option active" id="opt-fr">FR</div>
+    <div class="lang-option" id="opt-en">EN</div>
+  </div>
+  <div class="theme-switch" id="theme-toggle">
+    <div class="switch-handle">
+      <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path id="theme-path" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<main>
+  <a href="../index.html#projects" class="back-link" data-key="btn_back">← RETOUR AUX PROJETS</a>
+  <span class="category-tag" data-key="category">CLOUD SECURITY & SAST</span>
+  <h1 data-key="title">AWS IAM Privilege Escalation Scanner</h1>
+
+  <div class="article-body">
+    <div class="art-glass">
+      <h3 data-key="h_summary">Résumé du projet</h3>
+      <p class="art-text" data-key="p_summary">Développement d'un outil d'analyse statique capable de détecter 21 méthodes d'escalade de privilèges dans les politiques AWS IAM. L'objectif est d'identifier les configurations permissives ("Shadow Admins") qui permettent à un utilisateur restreint de devenir administrateur.</p>
+      
+      <div class="proj-action-links">
+        <a href="https://matthieusonzogni.com/AWS-IAM-privilege-escalation-policy-scanner/" target="_blank" class="action-btn primary">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+          <span>🚀 DÉMO LIVE</span>
+        </a>
+        <a href="https://github.com/ShawnDeLaTV/AWS-IAM-privilege-escalation-policy-scanner" target="_blank" class="action-btn">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.385.6.082.818-.26.818-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 3.509 1.305 4.365.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          <span>💻 REPO GITHUB</span>
+        </a>
+      </div>
+    </div>
+
+    <section>
+      <h2 data-key="h_logic">Logique de l'algorithme</h2>
+      <p class="art-text" data-key="p_logic">L'intelligence de ce scanner repose sur une <b>Analyse de Chemin (Path Analysis)</b>. Contrairement à un simple filtrage par mots-clés, l'outil analyse les dépendances entre les permissions. Par exemple, il ne lève pas une alerte critique pour un simple <i>iam:PassRole</i>, mais il identifie si cette action est combinée à une capacité de création de ressource (EC2, Lambda, Glue) permettant d'extraire des jetons de session via le Metadata Service (IMDS).</p>
+      <p class="art-text" data-key="p_logic_2">L'algorithme procède en trois temps : normalisation du JSON (gestion des Wildcards <i>"*"</i>), extraction des déclarations <i>"Allow"</i>, puis croisement avec une matrice de 21 schémas d'attaque documentés.</p>
+    </section>
+
+    <img src="../images/p-aws-iam-privilege-escalation-policy-scanner.png" class="art-img" alt="IAM Scanner Interface">
+
+    <section>
+      <h2 data-key="h_vectors">Les 21 Chemins d'Escalade (Rhino Security)</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 5%">ID</th>
+              <th style="width: 25%" data-key="th_vector">Vecteur</th>
+              <th style="width: 45%" data-key="th_path">Logique d'Exploitation</th>
+              <th style="width: 25%" data-key="th_rem">Remédiation</th>
+            </tr>
+          </thead>
+          <tbody id="vectors-table">
+            </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="art-glass">
+      <h3 data-key="h_ref">Origine de la Recherche</h3>
+      <p class="art-text" data-key="p_ref">Ce scanner implémente techniquement l'intégralité de l'article de référence de <b>Rhino Security Labs</b> : <a href="https://rhinosecuritylabs.com/aws/aws-iam-privilege-escalation/" target="_blank" style="color: var(--accent);">AWS IAM Privilege Escalation – Methods and Mitigation</a>. L'approche statique garantit qu'aucune donnée de politique sensible ne quitte votre navigateur.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+  const TRANSLATIONS = {
+    fr: {
+      btn_back: "← RETOUR AUX PROJETS", nav_about: "À PROPOS", nav_exp: "PARCOURS", nav_work: "PROJETS", nav_certs: "CERTIFICATIONS",
+      category: "CLOUD SECURITY & SAST", title: "AWS IAM Privilege Escalation Scanner",
+      h_summary: "Résumé du projet", p_summary: "Développement d'un outil d'analyse statique capable de détecter 21 méthodes d'escalade de privilèges dans les politiques AWS IAM. L'objectif est d'identifier les configurations permissives (\"Shadow Admins\") qui permettent à un utilisateur restreint de devenir administrateur.",
+      h_logic: "Logique de l'algorithme", p_logic: "L'intelligence de ce scanner repose sur une <b>Analyse de Chemin (Path Analysis)</b>. Contrairement à un simple filtrage par mots-clés, l'outil analyse les dépendances entre les permissions.",
+      p_logic_2: "L'algorithme procède en trois temps : normalisation du JSON, extraction des déclarations 'Allow', puis croisement avec une matrice de 21 schémas d'attaque.",
+      h_vectors: "Les 21 Chemins d'Escalade (Rhino Security)", th_vector: "Vecteur", th_path: "Logique d'Exploitation", th_rem: "Remédiation",
+      h_ref: "Origine de la Recherche", p_ref: "Ce scanner implémente techniquement l'intégralité de l'article de référence de <b>Rhino Security Labs</b>. L'approche statique garantit qu'aucune donnée ne quitte votre navigateur."
+    },
+    en: {
+      btn_back: "← BACK TO PROJECTS", nav_about: "ABOUT", nav_exp: "TIMELINE", nav_work: "PROJECTS", nav_certs: "CERTS",
+      category: "CLOUD SECURITY & SAST", title: "AWS IAM Privilege Escalation Scanner",
+      h_summary: "Project Summary", p_summary: "Development of a static analysis tool capable of detecting 21 privilege escalation methods in AWS IAM policies. The goal is to identify permissive configurations (\"Shadow Admins\") that allow a restricted user to become an admin.",
+      h_logic: "Algorithm Logic", p_logic: "The scanner's intelligence is based on <b>Path Analysis</b>. Unlike simple keyword filtering, the tool analyzes dependencies between permissions.",
+      p_logic_2: "The algorithm proceeds in three steps: JSON normalization, 'Allow' statement extraction, and matching against a matrix of 21 documented attack patterns.",
+      h_vectors: "The 21 Escalation Paths (Rhino Security)", th_vector: "Vector", th_path: "Exploitation Logic", th_rem: "Remediation",
+      h_ref: "Research Origin", p_ref: "This scanner technically implements the full reference article from <b>Rhino Security Labs</b>. The static approach ensures no sensitive policy data leaves your browser."
+    }
+  };
+
+  const VECTORS_DATA = [
+    { id: "01", name: "CreatePolicyVersion", fr: "Créer une version admin de sa politique et l'activer par défaut.", en: "Create an admin version of own policy and set as default.", rem: "Permissions Boundaries" },
+    { id: "02", name: "SetDefaultPolicyVersion", fr: "Rollback vers une ancienne version de politique possédant plus de droits.", en: "Rollback to an old version with higher privileges.", rem: "Versions Cleanup" },
+    { id: "03", name: "EC2 PassRole", fr: "Lancer une instance avec un profil admin pour voler les clés via l'IMDS.", en: "Launch EC2 with admin profile to steal keys via IMDS.", rem: "iam:PassedToService" },
+    { id: "04", name: "CreateAccessKey", fr: "Générer des clés API pour un utilisateur admin afin de l'usurper.", en: "Generate API keys for an administrator to impersonate them.", rem: "${aws:username} usage" },
+    { id: "05", name: "CreateLoginProfile", fr: "Créer un mot de passe console pour un utilisateur admin sans accès Web.", en: "Create console password for an admin without Web access.", rem: "API Restriction" },
+    { id: "06", name: "UpdateLoginProfile", fr: "Réinitialiser le mot de passe console d'un administrateur cible.", en: "Reset a target administrator's console password.", rem: "Enforce MFA" },
+    { id: "07", name: "AttachUserPolicy", fr: "S'attacher directement 'AdministratorAccess' à son compte.", en: "Directly attach 'AdministratorAccess' to own account.", rem: "Service Control Policies" },
+    { id: "08", name: "AttachGroupPolicy", fr: "Attacher une politique admin à un groupe dont on est membre.", en: "Attach admin policy to a group you belong to.", rem: "Group API monitoring" },
+    { id: "09", name: "AttachRolePolicy", fr: "Ajouter une politique admin à un rôle que l'on peut assumer.", en: "Add admin policy to a role you can assume.", rem: "CloudTrail monitoring" },
+    { id: "10", name: "PutUserPolicy", fr: "Injecter une politique 'inline' administrative sur son propre utilisateur.", en: "Inject admin inline policy into own user.", rem: "Managed Policies only" },
+    { id: "11", name: "PutGroupPolicy", fr: "Injecter une politique inline d'admin sur un groupe possédé.", en: "Inject admin inline policy into a group.", rem: "Audit inline policies" },
+    { id: "12", name: "PutRolePolicy", fr: "Injecter une politique inline d'admin sur un rôle assurable.", en: "Inject admin inline policy into an assumable role.", rem: "Permissions Boundaries" },
+    { id: "13", name: "AddUserToGroup", fr: "S'ajouter soi-même à un groupe IAM possédant les droits admin.", en: "Add self to an existing administrative IAM group.", rem: "Resource constraints" },
+    { id: "14", name: "UpdateAssumeRolePolicy", fr: "Modifier la Trust Policy d'un rôle pour s'autoriser à l'assumer.", en: "Modify Trust Policy to allow self-assumption.", rem: "Lock Trust Policy" },
+    { id: "15", name: "Lambda CreateFunction", fr: "Créer une Lambda admin pour exfiltrer des tokens ou modifier IAM.", en: "Create admin Lambda to exfiltrate tokens or modify IAM.", rem: "Lambda service limit" },
+    { id: "16", name: "EventSourceMapping", fr: "Déclencher une Lambda admin via un trigger (DynamoDB) sans droit Invoke.", en: "Trigger admin Lambda via DynamoDB without Invoke rights.", rem: "Monitor EventSource" },
+    { id: "17", name: "UpdateFunctionCode", fr: "Modifier le code d'une Lambda existante possédant un rôle admin.", en: "Modify code of an existing Lambda with an admin role.", rem: "Code Signing" },
+    { id: "18", name: "Glue CreateDevEndpoint", fr: "Créer un point Glue avec rôle admin pour accès SSH aux clés.", en: "Create Glue endpoint with admin role for SSH access.", rem: "Restrict Glue API" },
+    { id: "19", name: "Glue UpdateDevEndpoint", fr: "Changer la clé SSH d'un point Glue existant possédant un rôle puissant.", en: "Change SSH key of existing Glue endpoint.", rem: "API restriction" },
+    { id: "20", name: "CloudFormation Stack", fr: "Déployer une stack créant un admin via un rôle de service privilégié.", en: "Deploy stack creating an admin via privileged role.", rem: "CloudFormation audit" },
+    { id: "21", name: "DataPipeline Abuse", fr: "Utiliser DataPipeline pour exécuter des commandes CLI admin.", en: "Use DataPipeline to run admin CLI commands.", rem: "DataPipeline limit" }
+  ];
+
+  function applyLanguage(lang) {
+    localStorage.setItem('pref-lang', lang);
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.getElementById('opt-en').classList.toggle('active', lang === 'en');
+    document.getElementById('opt-fr').classList.toggle('active', lang === 'fr');
+    const t = TRANSLATIONS[lang];
+    document.querySelectorAll('[data-key]').forEach(el => {
+      if(t[el.getAttribute('data-key')]) el.innerHTML = t[el.getAttribute('data-key')];
+    });
+    
+    const table = document.getElementById('vectors-table');
+    table.innerHTML = VECTORS_DATA.map(v => `
+      <tr>
+        <td class="vector-id">${v.id}</td>
+        <td><b>${v.name}</b></td>
+        <td>${lang === 'fr' ? v.fr : v.en}</td>
+        <td style="font-style:italic; opacity:0.8;">${v.rem}</td>
+      </tr>
+    `).join('');
+  }
+
+  function applyTheme(theme) {
+    const isLight = (theme === 'light');
+    if (isLight) { document.documentElement.classList.add('light'); document.body.classList.add('light'); } 
+    else { document.documentElement.classList.remove('light'); document.body.classList.remove('light'); }
+    localStorage.setItem('pref-theme', theme);
+    document.getElementById('theme-path').setAttribute('d', isLight ? "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" : "M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z");
+    initCanvas();
+  }
+
+  document.getElementById('lang-selector').addEventListener('click', () => applyLanguage(document.body.classList.contains('lang-en') ? 'fr' : 'en'));
+  document.getElementById('theme-toggle').addEventListener('click', () => applyTheme(document.body.classList.contains('light') ? 'dark' : 'light'));
+
+  window.addEventListener('DOMContentLoaded', () => {
+    applyLanguage(localStorage.getItem('pref-lang') || 'fr');
+    applyTheme(localStorage.getItem('pref-theme') || 'dark');
+    animate();
+  });
+
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let pArr = [];
+  function initCanvas() {
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight; pArr = [];
+    const color = document.body.classList.contains('light') ? '124, 58, 237' : '168, 85, 247';
+    for(let i=0; i<150; i++) pArr.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, sX:(Math.random()-0.5)*0.3, sY:(Math.random()-0.5)*0.3, size: Math.random()*1.2+0.3, c:`rgba(${color},${Math.random()*0.4+0.1})`});
+  }
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pArr.forEach(p => { p.x+=p.sX; p.y+=p.sY; if(p.x>canvas.width)p.x=0; if(p.x<0)p.x=canvas.width; if(p.y>canvas.height)p.y=0; if(p.y<0)p.y=canvas.height; ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill(); });
+    requestAnimationFrame(animate);
+  }
+  window.onresize = initCanvas;
+
+  let lastScrollTop = 0;
+  window.addEventListener("scroll", function() {
+    let st = window.pageYOffset || document.documentElement.scrollTop;
+    let navbar = document.getElementById("navbar");
+    if (st > 50) navbar.classList.add("scrolled"); else navbar.classList.remove("scrolled");
+    if (st > lastScrollTop && st > 100) navbar.classList.add("nav-hidden"); else navbar.classList.remove("nav-hidden");
+    lastScrollTop = st <= 0 ? 0 : st;
+  });
+</script>
+</body>
+</html>

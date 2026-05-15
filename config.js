@@ -15,29 +15,52 @@ const TRANSLATIONS = {
                 desc: "<b>• Enseignement Multidisciplinaire :</b> Dispense de cours de Mathématiques, Physique-Chimie et Informatique pour des élèves de niveau Collège et Lycée.<br><b>• Préparation aux Examens :</b> Élaboration de programmes de révision intensifs et de sessions d'entraînement ciblées pour la réussite du Brevet et du Baccalauréat.<br><b>• Pédagogie Adaptative :</b> Conception de supports didactiques personnalisés visant à simplifier des concepts complexes (algorithmique, mécanique, analyse mathématique).<br><b>• Suivi de Performance :</b> Analyse régulière de la progression des élèves et renforcement des méthodologies de travail pour accroître l'autonomie et les résultats académiques.<br>" 
                 },
         ],
+        edu: [
+            {
+                date: "2025 — 2026",
+                title: "Maitrise en Cybersécurité",
+                co: "Université de Sherbrooke - Montréal, Canada",
+                desc: "Double diplôme et mobilité internationale."
+            },
+            {
+                date: "2023 — 2026",
+                title: "Diplôme d'Ingénieur en Informatique",
+                co: "ENSSAT - Lannion, France",
+                desc: "École d'ingénieur en informatique appartenant au concours Mines Telecom."
+            },
+            {
+                date: "2021 — 2023",
+                title: "Classe Préparatoire aux Grandes Écoles (CPGE) - Filière PCSI-PC",
+                co: "Lycée Marceau - Chartres, France",
+                desc: "Formation intensive de deux ans préparant aux concours d'entrée des grandes écoles d'ingénieurs."},
+            {
+                date: "2021",
+                title: "Baccalauréat Mathématiques, Physique-Chimie, Option Mathématiques Expertes",
+                co: "Lycée Jean Baptiste Corot - Savigny sur Orge, France"}
+        ],
         projects: [
             { 
                 title: "Analyseur de Politiques pour Escalation AWS", 
                 desc: "<b>2026</b><br><br>Outil d'analyse statique des politiques AWS IAM pour détecter les méthodes d'escalade de privilèges connues.", 
                 github: "https://github.com/ShawnDeLaTV/AWS-IAM-privilege-escalation-policy-scanner", 
                 demo: "https://matthieusonzogni.com/AWS-IAM-privilege-escalation-policy-scanner/", 
-                url: "projects/p-aws-iam-privilege-escalation-policy-scanner.html",
+                url: "projects/build-in-progress.html",
                 tags: ["IAM", "AWS", "ZeroTrust", "JavaScript"], 
                 image: "images/p-aws-iam-privilege-escalation-policy-scanner.png" 
             },
             { 
                 title: "Architecture Cloud AWS   Zero Trust en Terraform", 
                 desc: "<b>2026</b><br><br>Infrastructure Multi-AZ isolée via Terraform. Sécurisation via ALB/CloudFront.", 
-                github: "https://github.com/ShawnDeLaTV/aws-zero-trust", 
-                url: "projects/p-architecture-zero-trust.html",
+                github: "https://github.com/ShawnDeLaTV/terraform-aws-secure-multi-az-infra", 
+                url: "projects/build-in-progress.html",
                 tags: ["Terraform", "AWS", "ZeroTrust", "IaC"], 
                 image: "images/p-architecture-zero-trust.png" 
             },
             { 
                 title: "Implémentation d'un SSO Dockerisé avec Authelia", 
                 desc: "<b>2026</b><br><br>Centralisation OIDC et application du MFA sur l'ensemble des services.<br><br>", 
-                github: "https://github.com/ShawnDeLaTV/sso-authelia", 
-                url: "projects/sso-authelia.html",
+                github: "https://github.com/ShawnDeLaTV/ProjetSystemeEtReseaux", 
+                url: "projects/build-in-progress.html",
                 tags: ["Docker", "SSO", "Authelia", "Nginx"], 
                 image: "images/p-sso-authelia.png" 
             },

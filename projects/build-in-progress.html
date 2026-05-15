@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work in Progress — Matthieu Sonzogni</title>
+  
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('pref-theme');
+      if (savedTheme === 'light') document.documentElement.classList.add('light');
+    })();
+  </script>
+
+  <style>
+    :root {
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --bg: #030305;
+      --fg: #ffffff;
+      --muted: #cccccc;
+      --accent: #a855f7;
+      --grad: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+    }
+
+    html.light body {
+      --bg: #f8f9fb;
+      --fg: #000000;
+      --muted: #333333;
+      --accent: #7c3aed;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: var(--font); 
+      color: var(--fg); 
+      background: var(--bg); 
+      height: 100vh; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      overflow: hidden;
+      text-align: center;
+    }
+
+    #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+
+    .wip-container { padding: 24px; max-width: 500px; }
+
+    .code-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+      font-weight: 800;
+    }
+
+    h1 {
+      font-size: clamp(32px, 8vw, 48px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      border-radius: 4px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="wip-container">
+  <span class="code-tag">Status: 404 BUILDING</span>
+  <h1>Projet en cours</h1>
+  <p>La documentation technique de ce projet est actuellement en cours de rédaction.</p>
+    <a href="../index.html#projects" class="back-btn">← RETOUR AU PORTFOLIO</a>
+</div>
+
+<script>
+  /* BACKGROUND CANVAS (Même logique que ton portfolio) */
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let pArr = [];
+
+  function initCanvas() {
+    canvas.width = window.innerWidth; 
+    canvas.height = window.innerHeight; 
+    pArr = [];
+    const color = document.documentElement.classList.contains('light') ? '124, 58, 237' : '168, 85, 247';
+    for(let i=0; i<100; i++) {
+      pArr.push({
+        x: Math.random() * canvas.width, 
+        y: Math.random() * canvas.height, 
+        sX: (Math.random() - 0.5) * 0.4, 
+        sY: (Math.random() - 0.5) * 0.4, 
+        size: Math.random() * 1.5 + 0.5, 
+        c: `rgba(${color},${Math.random() * 0.3 + 0.1})`
+      });
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pArr.forEach(p => {
+      p.x += p.sX; p.y += p.sY;
+      if(p.x > canvas.width) p.x = 0; if(p.x < 0) p.x = canvas.width;
+      if(p.y > canvas.height) p.y = 0; if(p.y < 0) p.y = canvas.height;
+      ctx.fillStyle = p.c;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', initCanvas);
+  initCanvas();
+  animate();
+</script>
+
+</body>
+</html>

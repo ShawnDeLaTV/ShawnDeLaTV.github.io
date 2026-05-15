@@ -8,6 +8,7 @@ function applyLanguage(lang) {
     document.querySelectorAll('[data-key]').forEach(el => { if(t[el.getAttribute('data-key')]) el.textContent = t[el.getAttribute('data-key')]; });
     document.getElementById('about-text').innerHTML = t.about_bio;
     document.getElementById('exp-box').innerHTML = t.exp.map(e => `<div class="timeline-item"><div style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${e.date}</div><div style="font-size:20px;font-weight:700;color:var(--fg)">${e.title}</div><div style="font-size:15px;color:var(--accent);font-weight:600">${e.co}</div><p style="font-size:15px;color:var(--muted);margin-top:10px">${e.desc}</p></div>`).join('');
+    document.getElementById('edu-box').innerHTML = t.edu.map(e => `<div class="timeline-item"><div style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${e.date}</div><div style="font-size:20px;font-weight:700;color:var(--fg)">${e.title}</div><div style="font-size:15px;color:var(--accent);font-weight:600">${e.co}</div><p style="font-size:15px;color:var(--muted);margin-top:10px">${e.desc}</p></div>`).join('');
     
     document.getElementById('proj-box').innerHTML = t.projects.map(p => {
         const demoBtn = p.demo ? `
