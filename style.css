@@ -1,6 +1,6 @@
 /* --- VARIABLES & THEMES --- */
 :root {
-    --max: 850px;
+    --max: 850px; /* Retour à la largeur initiale comme demandé */
     --font: 'Inter', system-ui, -apple-system, sans-serif;
     --mono: 'JetBrains Mono', monospace;
     --bg: #030305;
@@ -96,7 +96,7 @@ nav.nav-hidden { transform: translateY(-100%); }
 .nav-links a:hover { color: var(--fg); }
 .nav-links a:hover::after { width: 100%; }
 
-/* --- CONTROLES (Langue & Thème) --- */
+/* --- CONTROLES --- */
 .nav-controls-fixed { 
     position: fixed; 
     top: 25px; 
@@ -212,29 +212,44 @@ h1 {
 
 .social-icon:hover { border-color: var(--accent); color: var(--accent); }
 
-.cv-btn { 
-    display: inline-block; 
-    padding: 12px 28px; 
-    margin-top: 15px; 
-    background: var(--surface); 
-    backdrop-filter: blur(10px); 
-    border: 1px solid var(--border); 
-    border-radius: 99px; 
-    color: var(--fg); 
-    text-decoration: none; 
-    font-family: var(--mono); 
-    font-weight: 700; 
-    font-size: 11px; 
-    letter-spacing: 1px; 
-    transition: 0.3s; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+.cv-btn {
+    display: inline-block;
+    padding: 12px 32px;
+    margin-top: 20px;
+    background: transparent;
+    border: 2px solid var(--accent);
+    border-radius: 4px;
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    position: relative;
+    transition: all 0.4s ease;
+    overflow: hidden;
+    z-index: 1;
 }
 
-.cv-btn:hover { 
-    border-color: var(--accent); 
-    transform: translateY(-2px); 
-    box-shadow: 0 8px 25px var(--accent-glow); 
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(99, 102, 241, 0.1)); 
+.cv-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    transition: all 0.4s ease;
+    z-index: -1;
+}
+
+.cv-btn:hover {
+    color: #fff;
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.cv-btn:hover::before {
+    left: 0;
 }
 
 /* --- MAIN CONTENT --- */
@@ -255,13 +270,17 @@ h2 {
 
 h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-/* --- GRILLE DE PROJETS --- */
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+/* --- GRILLE DE PROJETS (3 par ligne sur PC) --- */
+.grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); /* Force les 3 colonnes */
+    gap: 16px; /* Réduit un peu pour que ça tienne dans 850px */
+}
 
 .proj-card { 
     background: var(--surface); 
     border: 1px solid var(--border); 
-    border-radius: 24px; 
+    border-radius: 20px; 
     overflow: hidden; 
     transition: 0.3s ease; 
     display: flex; 
@@ -273,22 +292,25 @@ h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
 .proj-card:hover { border-color: var(--accent); transform: translateY(-5px); }
 
-.proj-img { width: 100%; height: 180px; background-size: cover; background-position: center; opacity: 0.8; }
-.proj-content { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
+.proj-img { width: 100%; height: 140px; background-size: cover; background-position: center; opacity: 0.8; }
+.proj-content { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; }
 
-.proj-links { display: flex; gap: 12px; margin-top: auto; padding-top: 20px; }
+.proj-content h3 { font-size: 16px; }
+.proj-content p { font-size: 12px; line-height: 1.4; }
+
+.proj-links { display: flex; gap: 8px; margin-top: auto; padding-top: 15px; }
 
 .proj-link { 
     flex: 1; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    gap: 6px;
-    padding: 8px; 
-    border-radius: 8px; 
+    gap: 4px;
+    padding: 6px; 
+    border-radius: 6px; 
     border: 1px solid var(--border);
     font-family: var(--mono); 
-    font-size: 10px; 
+    font-size: 9px; 
     font-weight: 700; 
     text-decoration: none;
     color: var(--muted); 
@@ -296,7 +318,7 @@ h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 }
 
 .proj-link:hover { background: var(--border); color: var(--fg); border-color: var(--accent); }
-.proj-link svg { width: 14px; height: 14px; }
+.proj-link svg { width: 12px; height: 12px; }
 
 /* --- TIMELINE & CERTIFICATIONS --- */
 .timeline { position: relative; padding-left: 35px; border-left: 2px solid var(--border); margin-left: 10px; }
@@ -317,79 +339,29 @@ h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .cert-card { display: flex; align-items: center; gap: 15px; color: var(--fg); }
 .cert-card img { width: 45px; height: 45px; object-fit: contain; }
 
-/* --- SKILLS / STACK --- */
+/* --- SKILLS --- */
 .stack-category { margin-bottom: 35px; }
-.stack-title { 
-    font-family: var(--mono); 
-    font-size: 13px; 
-    color: var(--fg); 
-    font-weight: 700; 
-    margin-bottom: 16px; 
-    text-transform: uppercase; 
-    letter-spacing: 2px; 
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
-}
+.stack-title { font-family: var(--mono); font-size: 13px; color: var(--fg); font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
 .stack-title::before { content: ''; width: 8px; height: 8px; background: var(--accent); border-radius: 2px; }
 
-.skill-pill { 
-    display: inline-flex; 
-    align-items: center; 
-    gap: 10px; 
-    padding: 10px 0; 
-    margin-right: 30px; 
-    font-family: var(--mono); 
-    color: var(--muted); 
-    font-size: 14px; 
-    transition: 0.3s; 
-}
+.skill-pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 0; margin-right: 30px; font-family: var(--mono); color: var(--muted); font-size: 14px; transition: 0.3s; }
 .skill-pill img { width: 20px; height: 20px; object-fit: contain; transition: 0.3s ease; }
 .skill-pill:hover { color: var(--fg); transform: translateX(5px); }
 
 /* --- FOOTER --- */
-footer { 
-    margin-top: 100px; 
-    padding: 40px 24px; 
-    border-top: 1px solid var(--border); 
-    text-align: center; 
-    font-family: var(--mono); 
-    font-size: 12px; 
-    color: var(--muted); 
-}
+footer { margin-top: 100px; padding: 40px 24px; border-top: 1px solid var(--border); text-align: center; font-family: var(--mono); font-size: 12px; color: var(--muted); }
 
 /* --- RESPONSIVE OPTIMIZATIONS --- */
 @media (max-width: 768px) {
-    /* Suppression de la barre de navigation sur smartphone */
-    nav {
-        display: none !important;
-    }
-
-    .nav-controls-fixed { 
-        top: 15px; 
-        right: 15px; 
-        transform: scale(0.9);
-    }
-
+    nav { display: none !important; }
+    .nav-controls-fixed { top: 15px; right: 15px; transform: scale(0.9); }
     header { padding: 80px 20px 40px; }
     h1 { font-size: 32px; letter-spacing: -1px; }
     .profile-img { width: 100px; height: 100px; }
-
-    /* Passage en 1 colonne pour les projets */
     .grid { grid-template-columns: 1fr; gap: 20px; }
-    
     h2 { font-size: 14px; letter-spacing: 2px; }
     h2::after { display: none; }
-
     .proj-content { padding: 20px; }
     .proj-links { flex-wrap: wrap; }
-
-    .skill-pill { margin-right: 15px; font-size: 12px; }
-    
-    /* On remet un padding normal puisque la barre du bas a disparu */
     footer { margin-bottom: 20px; }
-}
-
-@media (max-width: 380px) {
-    h1 { font-size: 28px; }
 }

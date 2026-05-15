@@ -1,7 +1,7 @@
 const TRANSLATIONS = {
     fr: {
         nav_about: "À PROPOS", nav_exp: "MON PARCOURS", nav_work: "MES PROJETS", nav_certs: "MES CERTIFICATIONS",
-        sec_about: "Profil", sec_exp: "Expériences Professionnelles", sec_work: "Mes Projets", sec_certs: "Certifications", sec_stack: "Expertise Technique",
+        sec_about: "Profil", sec_exp: "Mes Expériences Professionnelles", sec_work: "Mes Projets", sec_certs: "Mes Certifications", sec_stack: "Mon Expertise Technique",
         btn_cv: "TÉLÉCHARGER MON CV ↓",
         btn_github: "Code", btn_demo: "Demo",
         footer_text: "Designé & Développé par Matthieu Sonzogni avec l'aide de Gemini.",
@@ -12,6 +12,23 @@ const TRANSLATIONS = {
         ],
         projects: [
             { 
+                title: "Architecture Cloud AWS   Zero Trust en Terraform", 
+                desc: "<b>2026</b><br><br>Infrastructure Multi-AZ isolée via Terraform. Sécurisation via ALB/CloudFront.", 
+                github: "https://github.com/ShawnDeLaTV/aws-zero-trust", 
+                url: "projects/p-architecture-zero-trust.html",
+                tags: ["Terraform", "AWS", "Security", "HCL"], 
+                image: "images/p-architecture-zero-trust.png" 
+            },
+            { 
+                title: "Implémentation d'un SSO avec Authelia", 
+                desc: "<b>2026</b><br><br>Centralisation OIDC et application du MFA sur l'ensemble des services.<br><br>", 
+                github: "https://github.com/ShawnDeLaTV/sso-authelia", 
+                demo: "https://votre-demo.com", 
+                url: "projects/sso-authelia.html",
+                tags: ["Docker", "MFA", "Security"], 
+                image: "images/p-sso-authelia.png" 
+            },
+            { 
                 title: "Architecture AWS Zero Trust", 
                 desc: "Infrastructure Multi-AZ isolée via Terraform. Sécurisation via ALB/CloudFront.", 
                 github: "https://github.com/ShawnDeLaTV/aws-zero-trust", 
@@ -20,13 +37,12 @@ const TRANSLATIONS = {
                 image: "images/p-architecture-zero-trust.png" 
             },
             { 
-                title: "SSO & IAM avec Authelia", 
-                desc: "Centralisation OIDC et application du MFA sur l'ensemble des services.", 
-                github: "https://github.com/ShawnDeLaTV/sso-authelia", 
-                demo: "https://votre-demo.com", 
-                url: "projects/sso-authelia.html",
-                tags: ["Docker", "MFA", "Security"], 
-                image: "images/sso.png" 
+                title: "Architecture AWS Zero Trust", 
+                desc: "Infrastructure Multi-AZ isolée via Terraform. Sécurisation via ALB/CloudFront.", 
+                github: "https://github.com/ShawnDeLaTV/aws-zero-trust", 
+                url: "projects/p-architecture-zero-trust.html",
+                tags: ["Terraform", "AWS", "Security", "HCL"], 
+                image: "images/p-architecture-zero-trust.png" 
             }
         ],
         certs: [
