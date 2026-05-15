@@ -360,31 +360,9 @@ footer {
 
 /* --- RESPONSIVE OPTIMIZATIONS --- */
 @media (max-width: 768px) {
-    /* NAVBAR : App Dock style (en bas) */
+    /* Suppression de la barre de navigation sur smartphone */
     nav {
-        top: auto;
-        bottom: 0;
-        height: 65px;
-        background: rgba(3, 3, 5, 0.8) !important;
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-top: 1px solid var(--border);
-        border-bottom: none;
-    }
-
-    nav.nav-hidden { transform: translateY(100%); }
-
-    .nav-links { 
-        gap: 10px; 
-        width: 100%; 
-        justify-content: space-around; 
-        padding: 0 10px;
-    }
-    
-    .nav-links a { 
-        font-size: 9px; 
-        letter-spacing: 1px; 
-        padding: 5px;
+        display: none !important;
     }
 
     .nav-controls-fixed { 
@@ -393,7 +371,7 @@ footer {
         transform: scale(0.9);
     }
 
-    header { padding: 100px 20px 40px; }
+    header { padding: 80px 20px 40px; }
     h1 { font-size: 32px; letter-spacing: -1px; }
     .profile-img { width: 100px; height: 100px; }
 
@@ -408,11 +386,10 @@ footer {
 
     .skill-pill { margin-right: 15px; font-size: 12px; }
     
-    /* On laisse de la place pour la nav du bas */
-    footer { margin-bottom: 80px; }
+    /* On remet un padding normal puisque la barre du bas a disparu */
+    footer { margin-bottom: 20px; }
 }
 
 @media (max-width: 380px) {
     h1 { font-size: 28px; }
-    .nav-links a { font-size: 8px; }
 }
