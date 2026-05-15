@@ -335,10 +335,40 @@ h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
     border-radius: 50%; 
 }
 
-.cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
-.cert-card { display: flex; align-items: center; gap: 15px; color: var(--fg); }
-.cert-card img { width: 45px; height: 45px; object-fit: contain; }
+.cert-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 30px; 
+}
 
+.cert-card { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    color: var(--fg); 
+    transition: transform 0.3s ease, color 0.3s ease; /* Animation fluide */
+    cursor: default;
+}
+
+.cert-card img { 
+    width: 45px; 
+    height: 45px; 
+    object-fit: contain; 
+    transition: transform 0.3s ease;
+}
+
+/* Animation au survol identique à la section expertise */
+.cert-card:hover { 
+    transform: translateX(10px); 
+}
+
+.cert-card:hover img {
+    transform: scale(1.1); /* Petit effet de zoom sur le logo en plus */
+}
+
+.cert-card:hover div {
+    color: var(--accent); /* Le titre passe en violet comme les skills */
+}
 /* --- SKILLS --- */
 .stack-category { margin-bottom: 35px; }
 .stack-title { font-family: var(--mono); font-size: 13px; color: var(--fg); font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
