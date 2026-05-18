@@ -96,7 +96,11 @@ window.addEventListener('resize', initCanvas);
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // 1. Clic sur le bouton de téléchargement du CV
+  // ==========================================
+  // 1. TRACKING DU HEADER & PARAMÈTRES
+  // ==========================================
+
+  // Clic sur le bouton de téléchargement du CV
   const cvBtn = document.querySelector('.cv-btn');
   if (cvBtn) {
     cvBtn.addEventListener('click', () => {
@@ -107,33 +111,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2. Clics sur les réseaux sociaux (LinkedIn, GitHub)
-  const socialLinks = document.querySelectorAll('.social-icon');
-  socialLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      // On récupère l'URL pour savoir si c'est GitHub ou LinkedIn
+  // Clics sur les réseaux sociaux du HEADER uniquement
+  const topSocialLinks = document.querySelectorAll('header .social-links .social-icon');
+  topSocialLinks.forEach(link => {
+    link.addEventListener('click', () => {
       const url = link.getAttribute('href');
-      gtag('event', 'click_social', {
+      const platform = url.includes('linkedin') ? 'LinkedIn' : 'GitHub';
+      gtag('event', 'click_social_header', {
         'event_category': 'Engagement',
-        'social_platform': url.includes('linkedin') ? 'LinkedIn' : 'GitHub',
+        'platform': platform,
         'destination_url': url
       });
     });
   });
 
-  // 3. Clics sur les liens de la barre de navigation
-  const navLinks = document.querySelectorAll('#navbar a');
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      const sectionName = link.getAttribute('href');
-      gtag('event', 'navigation_click', {
-        'event_category': 'Navigation',
-        'target_section': sectionName
-      });
-    });
-  });
-
-  // 4. Changement de langue (FR / EN)
+  // Changement de langue (FR / EN)
   const langOptions = document.querySelectorAll('.lang-option');
   langOptions.forEach(option => {
     option.addEventListener('click', () => {
@@ -145,11 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 5. Changement de thème (Sombre / Clair)
+  // Changement de thème (Sombre / Clair)
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
-      // On attend un court instant pour capturer le thème après le switch
       setTimeout(() => {
         const isLight = document.documentElement.classList.contains('light');
         gtag('event', 'change_theme', {
@@ -159,4 +150,63 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 50);
     });
   }
+
+  // Clics sur la barre de navigation
+  const navLinks = document.querySelectorAll('#navbar a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      gtag('event', 'navigation_click', {
+        'event_category': 'Navigation',
+        'target_section': link.getAttribute('href')
+      });
+    });
+  });
+
+
+  // ==========================================
+  // 2. TRACKING AVANCÉ DE LA SECTION PROJETS
+  // ==========================================
+  
+  const projectCards = document.querySelectorAll('#projects .proj-card');
+
+  projectCards.forEach(card => {
+    // Récupérer le titre du projet de la carte actuelle pour catégoriser dans GA4
+    const projectTitle = card.querySelector('h3') ? card.querySelector('h3').innerText : 'Projet Inconnu';
+
+    // A. Clic sur le corps de la carte (Redirection vers build-in-progress ou démo)
+    card.addEventListener('click', (e) => {
+      // On vérifie que le clic ne vient pas d'un lien <a> ou d'un SVG interne
+      if (!e.target.closest('.proj-links') && !e.target.closest('a')) {
+        gtag('event', 'project_card_click', {
+          'event_category': 'Projects',
+          'project_name': projectTitle,
+          'action': 'Ouvrir les détails/demo du projet'
+        });
+      }
+    });
+
+    // B. Clics sur les liens spécifiques à l'intérieur de la carte (Code ou Lien externe)
+    const links = card.querySelectorAll('.proj-links a');
+    links.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const url = link.getAttribute('href');
+        let linkType = 'Autre';
+        
+        // On détermine dynamiquement le type de lien cliqué
+        if (url.includes('github.com')) {
+          linkType = 'Code Source (GitHub)';
+        } else if (url.includes('matthieusonzogni.com') || url.startsWith('http')) {
+          linkType = 'Demo / Live Link';
+        }
+
+        gtag('event', 'project_link_click', {
+          'event_category': 'Projects',
+          'project_name': projectTitle,
+          'link_type': linkType,
+          'destination_url': url
+        });
+      });
+    });
+  });
+
 });
