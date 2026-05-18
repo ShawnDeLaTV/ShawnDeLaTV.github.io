@@ -89,3 +89,74 @@ function animate() {
     requestAnimationFrame(animate);
 }
 window.addEventListener('resize', initCanvas);
+
+
+
+/* Tracking des boutons avec Google Analytics */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // 1. Clic sur le bouton de téléchargement du CV
+  const cvBtn = document.querySelector('.cv-btn');
+  if (cvBtn) {
+    cvBtn.addEventListener('click', () => {
+      gtag('event', 'click_cv', {
+        'event_category': 'Engagement',
+        'event_label': 'Téléchargement CV PDF'
+      });
+    });
+  }
+
+  // 2. Clics sur les réseaux sociaux (LinkedIn, GitHub)
+  const socialLinks = document.querySelectorAll('.social-icon');
+  socialLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      // On récupère l'URL pour savoir si c'est GitHub ou LinkedIn
+      const url = link.getAttribute('href');
+      gtag('event', 'click_social', {
+        'event_category': 'Engagement',
+        'social_platform': url.includes('linkedin') ? 'LinkedIn' : 'GitHub',
+        'destination_url': url
+      });
+    });
+  });
+
+  // 3. Clics sur les liens de la barre de navigation
+  const navLinks = document.querySelectorAll('#navbar a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const sectionName = link.getAttribute('href');
+      gtag('event', 'navigation_click', {
+        'event_category': 'Navigation',
+        'target_section': sectionName
+      });
+    });
+  });
+
+  // 4. Changement de langue (FR / EN)
+  const langOptions = document.querySelectorAll('.lang-option');
+  langOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      const lang = option.id === 'opt-fr' ? 'FR' : 'EN';
+      gtag('event', 'change_language', {
+        'event_category': 'Preference',
+        'chosen_language': lang
+      });
+    });
+  });
+
+  // 5. Changement de thème (Sombre / Clair)
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      // On attend un court instant pour capturer le thème après le switch
+      setTimeout(() => {
+        const isLight = document.documentElement.classList.contains('light');
+        gtag('event', 'change_theme', {
+          'event_category': 'Preference',
+          'chosen_theme': isLight ? 'Light' : 'Dark'
+        });
+      }, 50);
+    });
+  }
+});
