@@ -36,7 +36,9 @@ const TRANSLATIONS = {
             {
                 date: "2021",
                 title: "Baccalauréat Mathématiques, Physique-Chimie, Option Mathématiques Expertes",
-                co: "Lycée Jean Baptiste Corot - Savigny sur Orge, France"}
+                co: "Lycée Jean Baptiste Corot - Savigny sur Orge, France",
+                desc: "Formation intensive de deux ans préparant aux concours d'entrée des grandes écoles d'ingénieurs."},
+
         ],
         projects: [
             { 
