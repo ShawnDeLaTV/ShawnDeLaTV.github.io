@@ -74,38 +74,78 @@ const TRANSLATIONS = {
         ]
     },
     en: {
-        nav_about: "ABOUT", nav_exp: "JOURNEY", nav_work: "PROJECTS", nav_certs: "CERTS",
-        sec_about: "Profile", sec_exp: "Professional Experience", sec_work: "Technical Projects", sec_certs: "Certifications & Education", sec_stack: "Technical Expertise",
+        nav_about: "ABOUT", nav_exp: "MY JOURNEY", nav_work: "MY PROJECTS", nav_certs: "MY CERTIFICATIONS",
+        sec_about: "Profile", sec_exp: "Professional Experience", sec_work: "My Projects", sec_certs: "My Certifications", sec_stack: "Technical Expertise",
         btn_cv: "DOWNLOAD RESUME ↓",
-        btn_github: "Source", btn_demo: "Live Demo",
+        btn_github: "Code", btn_demo: "Link",
         footer_text: "Designed & Developed by Matthieu Sonzogni with Gemini's help.",
-        about_bio: "Future Graduate Engineer (2026), focusing on Cloud Architecture and Cybersecurity. My international experience and double degree have enriched my technical vision. I specialize in AWS protection, mastering Terraform for immutable and secure environments.",
+        about_bio: "As a future Graduate Engineer (completing in August 2026), my academic path is shaped by a demanding dual degree and international mobility that has deeply enriched both my technical and personal perspective. This experience abroad allowed me to develop strong adaptability and test my methodologies against global standards, strengthening my ability to operate within complex environments.<br><br>Today, I specialize in securing infrastructures on Amazon Web Services. Moving beyond the knowledge built during my internships, I constantly sharpen my expertise by developing concrete personal projects. I master automation via Terraform to build immutable environments within the AWS ecosystem, placing a strict emphasis on network isolation and rigorous identity management.<br><br>My objective is to transform security and compliance requirements into true drivers of business agility. Passionate about defending modern architectures, I am steering my career toward Cloud Security Engineering and am actively seeking my first professional challenge starting September 2026.<br><br>I hope you enjoy exploring my portfolio.",
         exp: [
-            { date: "MAY 2026 — AUG 2026", title: "Cloud Security Analyst", co: "BDC", desc: "• AWS/Azure Hardening.<br>• IAM Governance.<br>• SecOps Automation." },
-            { date: "JUNE 2025 — AUG 2025", title: "Pentester Intern", co: "BNP Paribas", desc: "• Web & API Pentesting.<br>• Business Logic Analysis.<br>• Remediation Advisory." }
+            { date: "MAY 2026 — AUGUST 2026", title: "Cloud Security & SSDLC Analyst - Internship", co: "Business Development Bank of Canada (BDC)", desc: "[Coming soon]" },
+            { date: "JUNE 2025 — AUGUST 2025", title: "Pentester - Internship", co: "BNP Paribas", desc: "<b>• Offensive Audits (Web & API):</b> Conducted penetration testing on banking applications within staging environments to identify critical vulnerabilities.<br><b>• Business Logic Analysis:</b> Detected security flaws using manual and automated testing tools (Burp Suite, OWASP ZAP) targeting sensitive data flows.<br><b>• Remediation Advisory:</b> Provided technical guidance to development teams for implementing security patches and hardening code repositories.<br><b>• Security Validation:</b> Performed systematic re-testing to certify effective vulnerability resolution prior to production deployments.<br>" },
+            {   date: "2022 — 2025", 
+                title: "Private STEM Tutor", 
+                co: "Freelance", 
+                desc: "<b>• Multidisciplinary Teaching:</b> Provided Mathematics, Physics, Chemistry, and Computer Science tutoring for Middle School and High School students.<br><b>• Exam Preparation:</b> Designed intensive revision programs and targeted practice sessions for success in national graduation exams.<br><b>• Adaptive Pedagogy:</b> Created customized learning materials to simplify complex concepts (algorithms, mechanics, mathematical analysis).<br><b>• Performance Tracking:</b> Regularly assessed student progress and reinforced study methodologies to boost academic autonomy and results.<br>" 
+            },
+        ],
+        edu: [
+            {
+                date: "2025 — 2026",
+                title: "Master's Degree in Cybersecurity",
+                co: "Université de Sherbrooke - Montreal, Canada",
+                desc: "Double degree program and international academic mobility."
+            },
+            {
+                date: "2023 — 2026",
+                title: "Engineering Degree in Computer Science",
+                co: "ENSSAT - Lannion, France",
+                desc: "Graduate Engineering School, part of the Mines-Télécom Concours."
+            },
+            {
+                date: "2021 — 2023",
+                title: "Classes Préparatoires aux Grandes Écoles (CPGE) - PCSI-PC Pathway",
+                co: "Lycée Marceau - Chartres, France",
+                desc: "A highly selective two-year intensive undergraduate program preparing for the competitive entrance exams of top-tier engineering schools."
+            },
+            {
+                date: "2021",
+                title: "French Baccalaureate - Mathematics, Physics & Chemistry, Expert Mathematics Option",
+                co: "Lycée Jean Baptiste Corot - Savigny sur Orge, France",
+                desc: "High School Graduation with honors, specializing in advanced sciences and complex mathematics."
+            },
         ],
         projects: [
             { 
-                title: "AWS Zero Trust Architecture", 
-                desc: "Multi-AZ Terraform infrastructure. Flow securing.", 
-                github: "https://github.com/ShawnDeLaTV/aws-zero-trust", 
-                url: "projects/p-architecture-zero-trust.html",
-                tags: ["Terraform", "AWS", "Security", "HCL"], 
+                title: "AWS Privilege Escalation Policy Scanner", 
+                desc: "<b>2026</b><br><br>Static analysis tool for AWS IAM policies designed to detect known privilege escalation vectors.", 
+                github: "https://github.com/ShawnDeLaTV/AWS-IAM-privilege-escalation-policy-scanner", 
+                demo: "https://matthieusonzogni.com/AWS-IAM-privilege-escalation-policy-scanner/", 
+                url: "projects/build-in-progress.html",
+                tags: ["IAM", "AWS", "ZeroTrust", "JavaScript"], 
+                image: "images/p-aws-iam-privilege-escalation-policy-scanner.png" 
+            },
+            { 
+                title: "AWS Zero Trust Cloud Architecture Terraform", 
+                desc: "<b>2026</b><br><br>Isolated Multi-AZ infrastructure built via Terraform. Secured traffic flows through ALB and CloudFront.", 
+                github: "https://github.com/ShawnDeLaTV/terraform-aws-secure-multi-az-infra", 
+                url: "projects/build-in-progress.html",
+                tags: ["Terraform", "AWS", "ZeroTrust", "IaC"], 
                 image: "images/p-architecture-zero-trust.png" 
             },
             { 
-                title: "SSO & IAM with Authelia", 
-                desc: "OIDC centralization and MFA enforcement across all services.", 
-                github: "https://github.com/ShawnDeLaTV/sso-authelia", 
-                demo: "https://votre-demo.com", 
-                url: "projects/sso-authelia.html",
-                tags: ["Docker", "MFA", "Security"], 
-                image: "images/sso.png" 
-            }
+                title: "Dockerized Authelia SSO Implementation", 
+                desc: "<b>2026</b><br><br>OIDC centralization and enforcement of Multi-Factor Authentication (MFA) across all self-hosted services.<br><br>", 
+                github: "https://github.com/ShawnDeLaTV/ProjetSystemeEtReseaux", 
+                url: "projects/build-in-progress.html",
+                tags: ["Docker", "SSO", "Authelia", "Nginx"], 
+                image: "images/p-sso-authelia.png" 
+            },
         ],
         certs: [
             { name: "AWS Solutions Architect", date: "Associate", img: "images/certifications/AWSSAA.png" },
-            { name: "HashiCorp Terraform", date: "Associate (In progress)", img: "images/certifications/TFA.png" }
+            { name: "HashiCorp Terraform", date: "Associate <br>(Currently preparing)", img: "images/certifications/TFA.png" },
+            { name: "TOEIC English", date: "B2 Level", img: "images/certifications/TOEIC.png" }
         ]
     }
 };
