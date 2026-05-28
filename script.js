@@ -10,7 +10,8 @@ function applyLanguage(lang) {
     document.getElementById('exp-box').innerHTML = t.exp.map(e => `<div class="timeline-item"><div style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${e.date}</div><div style="font-size:20px;font-weight:700;color:var(--fg)">${e.title}</div><div style="font-size:15px;color:var(--accent);font-weight:600">${e.co}</div><p style="font-size:15px;color:var(--muted);margin-top:10px">${e.desc}</p></div>`).join('');
     document.getElementById('edu-box').innerHTML = t.edu.map(e => `<div class="timeline-item"><div style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${e.date}</div><div style="font-size:20px;font-weight:700;color:var(--fg)">${e.title}</div><div style="font-size:15px;color:var(--accent);font-weight:600">${e.co}</div><p style="font-size:15px;color:var(--muted);margin-top:10px">${e.desc}</p></div>`).join('');
     
-    document.getElementById('proj-box').innerHTML = t.projects.map(p => {
+    // RENDER DE TOUS LES PROJETS (Tous visibles par défaut avec la classe standard)
+    document.getElementById('proj-box').innerHTML = t.projects.map((p) => {
         const demoBtn = p.demo ? `
             <a href="${p.demo}" target="_blank" class="proj-link" onclick="event.stopPropagation();">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -36,6 +37,13 @@ function applyLanguage(lang) {
                 </div>
             </div>`;
     }).join('');
+    
+    // Reset simple de la boîte de projets sans bouton additionnel
+    const projBox = document.getElementById('proj-box');
+    projBox.classList.remove('expanded');
+    
+    const oldContainer = document.querySelector('.more-projects-container');
+    if (oldContainer) oldContainer.remove();
     
     document.getElementById('cert-box').innerHTML = t.certs.map(c => `<div class="cert-card"><img src="${c.img}" alt="${c.name}"><div style="color:var(--fg)"><div style="font-size:16px;font-weight:700">${c.name}</div><div style="font-size:12px;color:var(--muted);font-family:var(--mono)">${c.date}</div></div></div>`).join('');
     document.getElementById('skill-box').innerHTML = STACK_DATA.map(cat => `<div class="stack-category"><div class="stack-title">${cat.cat}</div>${cat.items.map(item => `<div class="skill-pill"><img src="${item.icon}" alt="${item.name}">${item.name}</div>`).join('')}</div>`).join('');
@@ -74,139 +82,134 @@ window.addEventListener("scroll", function() {
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 let pArr = [];
+
 window.initCanvas = function() {
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight; pArr = [];
+    if (!canvas) return;
+    canvas.width = window.innerWidth; 
+    canvas.height = window.innerHeight; 
+    pArr = [];
+    
     const isLight = document.documentElement.classList.contains('light');
     const color = isLight ? '124, 58, 237' : '168, 85, 247';
-    const count = window.innerWidth < 768 ? 300 : 800;
+    const count = window.innerWidth < 768 ? 50 : 120; 
+    
     for (let i = 0; i < count; i++) {
-        pArr.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*1.2+0.3, speedX: (Math.random()-0.5)*0.3, speedY: (Math.random()-0.5)*0.3, color: `rgba(${color}, ${Math.random()*0.4+0.1})`});
+        pArr.push({
+            x: Math.random() * canvas.width, 
+            y: Math.random() * canvas.height, 
+            size: Math.random() * 1.2 + 0.8, 
+            speedX: (Math.random() - 0.5) * 0.35, 
+            speedY: (Math.random() - 0.5) * 0.35, 
+            color: `rgba(${color}, ${isLight ? '0.22' : '0.35'})`
+        });
     }
-}
+};
+
 function animate() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    pArr.forEach(p => { p.x+=p.speedX; p.y+=p.speedY; if(p.x>canvas.width)p.x=0; if(p.x<0)p.x=canvas.width; if(p.y>canvas.height)p.y=0; if(p.y<0)p.y=canvas.height; ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); });
+    if(canvas && ctx) {
+        const isLight = document.documentElement.classList.contains('light');
+        const lineColor = isLight ? '124, 58, 237' : '168, 85, 247';
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        pArr.forEach(p => { 
+            p.x += p.speedX; 
+            p.y += p.speedY; 
+            
+            if(p.x > canvas.width) p.x = 0; 
+            if(p.x < 0) p.x = canvas.width; 
+            if(p.y > canvas.height) p.y = 0; 
+            if(p.y < 0) p.y = canvas.height; 
+            
+            ctx.fillStyle = p.color; 
+            ctx.beginPath(); 
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); 
+            ctx.fill(); 
+        });
+        
+        const maxDistance = 125;
+        for (let i = 0; i < pArr.length; i++) {
+            for (let j = i + 1; j < pArr.length; j++) {
+                const dx = pArr[i].x - pArr[j].x;
+                const dy = pArr[i].y - pArr[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < maxDistance) {
+                    const alpha = ((1 - (dist / maxDistance)) * (isLight ? 0.07 : 0.14)).toFixed(3);
+                    ctx.strokeStyle = `rgba(${lineColor}, ${alpha})`;
+                    ctx.lineWidth = 1.3; 
+                    ctx.beginPath();
+                    ctx.moveTo(pArr[i].x, pArr[i].y);
+                    ctx.lineTo(pArr[j].x, pArr[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
     requestAnimationFrame(animate);
 }
+
 window.addEventListener('resize', initCanvas);
 
-
-
 /* Tracking des boutons avec Google Analytics */
-
 document.addEventListener('DOMContentLoaded', () => {
-
-  // ==========================================
-  // 1. TRACKING DU HEADER & PARAMÈTRES
-  // ==========================================
-
-  // Clic sur le bouton de téléchargement du CV
-  const cvBtn = document.querySelector('.cv-btn');
-  if (cvBtn) {
-    cvBtn.addEventListener('click', () => {
-      gtag('event', 'click_cv', {
-        'event_category': 'Engagement',
-        'event_label': 'Téléchargement CV PDF'
-      });
-    });
-  }
-
-  // Clics sur les réseaux sociaux du HEADER uniquement
-  const topSocialLinks = document.querySelectorAll('header .social-links .social-icon');
-  topSocialLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      const url = link.getAttribute('href');
-      const platform = url.includes('linkedin') ? 'LinkedIn' : 'GitHub';
-      gtag('event', 'click_social_header', {
-        'event_category': 'Engagement',
-        'platform': platform,
-        'destination_url': url
-      });
-    });
-  });
-
-  // Changement de langue (FR / EN)
-  const langOptions = document.querySelectorAll('.lang-option');
-  langOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      const lang = option.id === 'opt-fr' ? 'FR' : 'EN';
-      gtag('event', 'change_language', {
-        'event_category': 'Preference',
-        'chosen_language': lang
-      });
-    });
-  });
-
-  // Changement de thème (Sombre / Clair)
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      setTimeout(() => {
-        const isLight = document.documentElement.classList.contains('light');
-        gtag('event', 'change_theme', {
-          'event_category': 'Preference',
-          'chosen_theme': isLight ? 'Light' : 'Dark'
+    const cvBtn = document.querySelector('.cv-btn');
+    if (cvBtn) {
+        cvBtn.addEventListener('click', () => {
+            gtag('event', 'click_cv', { 'event_category': 'Engagement', 'event_label': 'Téléchargement CV PDF' });
         });
-      }, 50);
-    });
-  }
+    }
 
-  // Clics sur la barre de navigation
-  const navLinks = document.querySelectorAll('#navbar a');
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      gtag('event', 'navigation_click', {
-        'event_category': 'Navigation',
-        'target_section': link.getAttribute('href')
-      });
-    });
-  });
-
-
-  // ==========================================
-  // 2. TRACKING AVANCÉ DE LA SECTION PROJETS
-  // ==========================================
-  
-  const projectCards = document.querySelectorAll('#projects .proj-card');
-
-  projectCards.forEach(card => {
-    // Récupérer le titre du projet de la carte actuelle pour catégoriser dans GA4
-    const projectTitle = card.querySelector('h3') ? card.querySelector('h3').innerText : 'Projet Inconnu';
-
-    // A. Clic sur le corps de la carte (Redirection vers build-in-progress ou démo)
-    card.addEventListener('click', (e) => {
-      // On vérifie que le clic ne vient pas d'un lien <a> ou d'un SVG interne
-      if (!e.target.closest('.proj-links') && !e.target.closest('a')) {
-        gtag('event', 'project_card_click', {
-          'event_category': 'Projects',
-          'project_name': projectTitle,
-          'action': 'Ouvrir les détails/demo du projet'
+    const topSocialLinks = document.querySelectorAll('header .social-links .social-icon');
+    topSocialLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            const url = link.getAttribute('href');
+            const platform = url.includes('linkedin') ? 'LinkedIn' : 'GitHub';
+            gtag('event', 'click_social_header', { 'event_category': 'Engagement', 'platform': platform, 'destination_url': url });
         });
-      }
     });
 
-    // B. Clics sur les liens spécifiques à l'intérieur de la carte (Code ou Lien externe)
-    const links = card.querySelectorAll('.proj-links a');
-    links.forEach(link => {
-      link.addEventListener('click', (e) => {
-        const url = link.getAttribute('href');
-        let linkType = 'Autre';
-        
-        // On détermine dynamiquement le type de lien cliqué
-        if (url.includes('github.com')) {
-          linkType = 'Code Source (GitHub)';
-        } else if (url.includes('matthieusonzogni.com') || url.startsWith('http')) {
-          linkType = 'Demo / Live Link';
-        }
-
-        gtag('event', 'project_link_click', {
-          'event_category': 'Projects',
-          'project_name': projectTitle,
-          'link_type': linkType,
-          'destination_url': url
+    const langOptions = document.querySelectorAll('.lang-option');
+    langOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const lang = option.id === 'opt-fr' ? 'FR' : 'EN';
+            gtag('event', 'change_language', { 'event_category': 'Preference', 'chosen_language': lang });
         });
-      });
     });
-  });
 
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            setTimeout(() => {
+                const isLight = document.documentElement.classList.contains('light');
+                gtag('event', 'change_theme', { 'event_category': 'Preference', 'chosen_theme': isLight ? 'Light' : 'Dark' });
+            }, 50);
+        });
+    }
+
+    const navLinks = document.querySelectorAll('#navbar a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            gtag('event', 'navigation_click', { 'event_category': 'Navigation', 'target_section': link.getAttribute('href') });
+        });
+    });
+
+    const projectCards = document.querySelectorAll('#projects .proj-card');
+    projectCards.forEach(card => {
+        const projectTitle = card.querySelector('h3') ? card.querySelector('h3').innerText : 'Projet Inconnu';
+        card.addEventListener('click', (e) => {
+            if (!e.target.closest('.proj-links') && !e.target.closest('a')) {
+                gtag('event', 'project_card_click', { 'event_category': 'Projects', 'project_name': projectTitle, 'action': 'Ouvrir les détails/demo du projet' });
+            }
+        });
+
+        const links = card.querySelectorAll('.proj-links a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                const url = link.getAttribute('href');
+                let linkType = url.includes('github.com') ? 'Code Source (GitHub)' : 'Demo / Live Link';
+                gtag('event', 'project_link_click', { 'event_category': 'Projects', 'project_name': projectTitle, 'link_type': linkType, 'destination_url': url });
+            });
+        });
+    });
 });

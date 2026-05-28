@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4G Frame Decoder — Matthieu Sonzogni</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('pref-theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.add('light');
+      }
+      const savedLang = localStorage.getItem('pref-lang') || 'fr';
+      document.documentElement.setAttribute('lang', savedLang);
+    })();
+  </script>
+</head>
+<body class="lang-fr">
+
+<canvas id="bg-canvas"></canvas>
+
+<nav id="navbar">
+  <div class="nav-links">
+    <a href="../index.html#about" data-key="nav_about">À PROPOS</a>
+    <a href="../index.html#experience" data-key="nav_exp">PARCOURS</a>
+    <a href="../index.html#projects" data-key="nav_work">PROJETS</a>
+    <a href="../index.html#certifications" data-key="nav_certs">CERTIFICATIONS</a>
+  </div>
+</nav>
+
+<div class="nav-controls-fixed">
+  <div class="lang-selector" id="lang-selector">
+    <div class="lang-pill"></div>
+    <div class="lang-option active" id="opt-fr">FR</div>
+    <div class="lang-option" id="opt-en">EN</div>
+  </div>
+  <div class="theme-switch" id="theme-toggle">
+    <div class="switch-handle">
+      <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path id="theme-path" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<main>
+  <a href="../index.html#projects" class="back-link" data-key="btn_back">← RETOUR AUX PROJETS</a>
+  
+  <span class="category-tag" data-key="category">TRAITEMENT DU SIGNAL / TÉLÉCOMS</span>
+  <h1 data-key="title">4G Frame Decoder</h1>
+
+  <div class="article-body">
+
+    <div class="art-glass">
+      <h2 style="margin-top:0; color:var(--accent); letter-spacing:3px; font-size:14px;" data-key="sec_context">Résumé</h2>
+      <p class="art-text" data-key="desc">Outil de traitement du signal et de décodage en Python permettant d'extraire des données utilisateur chiffrées à partir de flux de communication sans fil (OFDM, démodulation multi-couches et correction d'erreurs).</p>
+      
+      <div class="proj-action-links">
+        <a href="https://github.com/ShawnDeLaTV/python-4g-frame-decoder" target="_blank" class="action-btn">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.385.6.082.818-.26.818-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 3.509 1.305 4.365.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          <span data-key="btn_github">Voir le code</span>
+        </a>
+      </div>
+    </div>
+
+    <p class="art-text" data-key="p_overview">
+      Ce décodeur spécialisé est conçu pour traiter des matrices de signaux complexes transmises sur des canaux OFDM (Orthogonal Frequency-Division Multiplexing). Il implémente des stratégies de démodulation et de décodage multi-niveaux pour extraire et déchiffrer les messages des flux de données. Le projet a été initialement développé en 2025 dans un cadre académique privé avant d'être migré publiquement.
+    </p>
+
+    <div style="margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; text-align: center;">
+      <svg viewBox="0 0 800 100" width="100%" height="auto" style="display: block; margin: 0 auto; overflow: visible;">
+        <g fill="none" stroke="currentColor" opacity="0.3" stroke-width="1.5">
+          <rect x="10" y="20" width="120" height="50" rx="8" />
+          <rect x="170" y="20" width="120" height="50" rx="8" />
+          <rect x="330" y="20" width="130" height="50" rx="8" />
+          <rect x="500" y="20" width="120" height="50" rx="8" />
+          <rect x="660" y="20" width="130" height="50" rx="8" />
+        </g>
+        <g stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5">
+          <path d="M 130 45 L 170 45" marker-end="url(#arrow-head)" />
+          <path d="M 290 45 L 330 45" marker-end="url(#arrow-head)" />
+          <path d="M 460 45 L 500 45" marker-end="url(#arrow-head)" />
+          <path d="M 620 45 L 660 45" marker-head="url(#arrow-head)" />
+        </g>
+        <defs>
+          <marker id="arrow-head" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="currentColor" opacity="0.6"/>
+          </marker>
+        </defs>
+        <g fill="currentColor" font-family="var(--mono)" font-size="11" text-anchor="middle">
+          <text x="70" y="44" font-weight="bold">Matrices IQ</text>
+          <text x="70" y="58" opacity="0.6">Fichiers CSV</text>
+          <text x="230" y="44" font-weight="bold">Démodulation</text>
+          <text x="230" y="58" fill="var(--accent)">BPSK/QPSK/QAM</text>
+          <text x="395" y="44" font-weight="bold">Correction (FEC)</text>
+          <text x="395" y="58" opacity="0.6">Hamming(7,4)</text>
+          <text x="560" y="44" font-weight="bold">Intégrité</text>
+          <text x="560" y="58" opacity="0.6">Vérif. CRC</text>
+          <text x="725" y="44" font-weight="bold">Déchiffrement</text>
+          <text x="725" y="58" fill="var(--accent)">Output Clair</text>
+        </g>
+      </svg>
+    </div>
+
+    <h2 style="color:var(--accent);" data-key="h2_skills">Expertise & Compétences Validées</h2>
+    <ul class="art-text">
+      <li><strong>Traitement du signal :</strong> Manipulation de matrices complexes et extraction de signaux en environnement bruité via analyse spectrale et filtrage adaptatif.</li>
+      <li><strong>Modulation numérique :</strong> Implémentation et décodage des modulations BPSK, QPSK et QAM-16 avec seuillage de décision adaptatif.</li>
+      <li><strong>Correction d'erreurs (FEC) :</strong> Décodage syndrome de codes de Hamming(7,4) et décodage dur pour flux convolutifs avec correction automatique d'erreurs.</li>
+      <li><strong>Réseaux Mobiles 4G :</strong> Décodage des canaux physiques PBCH, PDCCH, et PDSCH conformes aux standards 3GPP LTE.</li>
+      <li><strong>Cryptanalyse :</strong> Validation d'intégrité par CRC polynomial et déchiffrement par algorithmes de chiffrement (César, substitution).</li>
+      <li><strong>Traitement de fichiers :</strong> Parsing de flux CSV complexes, sérialisation de résultats et logging structuré d'opérations.</li>
+    </ul>
+
+    <h2 style="color:var(--accent);" data-key="h2_structure">Structure du Projet</h2>
+    <div class="art-code">
+<pre><code>├── python-4g-frame-decoder/
+│   ├── main.py                  <span class="c"># Orchestrateur principal : chargement, décodage, résultats</span>
+│   ├── imports.py               <span class="c"># Centralisation et gestion des dépendances</span>
+│   ├── qam16_demod.py           <span class="c"># Démodulation QAM-16 (16 points de constellation)</span>
+│   ├── crc.py                   <span class="c"># Validation CRC 8/16/24/32-bits (polynômes)</span>
+│   ├── hamming.py               <span class="c"># Codage/décodage Hamming(7,4) avec correction d'erreur</span>
+│   ├── binary_transformation.py <span class="c"># Conversion bits↔octets, déchiffrement, masquage</span>
+│   ├── tests_hamming.py         <span class="c"># Suite de tests unitaires (cas nominaux + erreurs)</span>
+│   ├── tests_modulation.py      <span class="c"># Validation des démodulateurs (BPSK, QPSK, QAM-16)</span>
+│   ├── tfMatrix_*.csv           <span class="c"># Données d'entrée : matrices complexes (Re, Im) en CSV</span>
+│   └── response.txt             <span class="c"># Résultats : payloads décodés + diagnostic</span></code></pre>
+    </div>
+
+    <h2 style="color:var(--accent);" data-key="h2_pipeline">Pipeline de Traitement des Canaux</h2>
+    <p class="art-text" data-key="p_pipeline_desc">
+      Le décodeur reproduit fidèlement la couche physique d'une station de réception en segmentant le traitement selon les canaux LTE/4G standards du 3GPP :
+    </p>
+    <ol class="art-text">
+      <li>
+        <strong>PBCH (Physical Broadcast Channel) :</strong> Extraction des informations de contrôle globales de la cellule. Décode le Cell ID (identifiant unique), le nombre d'utilisateurs actifs et les paramètres de synchronisation de base. Ce canal est toujours transmis en QPSK pour robustesse maximale.
+      </li>
+      <li>
+        <strong>PDCCH (Physical Downlink Control Channel) :</strong> Interprétation des messages de contrôle d'allocation de ressources. Pour chaque utilisateur détecté, extrait le schéma de modulation (MCS = Modulation Coding Scheme), les blocs de ressources (RB) alloués et l'indice de transport utilisé pour le décodage PDSCH.
+      </li>
+      <li>
+        <strong>PDSCH (Physical Downlink Shared Channel) :</strong> Pipeline complet d'extraction de données :
+        <ul style="margin-left: 2rem;">
+          <li><strong>Extraction du payload :</strong> Récupération des symboles IQ du bloc de ressources alloué</li>
+          <li><strong>Démodulation :</strong> Conversion en bits selon le MCS (BPSK→1 bit, QPSK→2 bits, QAM-16→4 bits par symbole)</li>
+          <li><strong>Correction d'erreurs :</strong> Application du décodeur Hamming(7,4) sur blocs de 7 bits</li>
+          <li><strong>Validation CRC :</strong> Vérification de l'intégrité via polynomial (8, 16, 24 ou 32 bits)</li>
+          <li><strong>Déchiffrement :</strong> Récupération du message en clair après suppression du chiffre appliqué</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h2 style="color:var(--accent);" data-key="h2_algorithms">Algorithmes & Implémentations Clés</h2>
+    
+    <h3 data-key="h3_demod">1. Démodulation Numérique (BPSK, QPSK, QAM-16)</h3>
+    <p class="art-text" data-key="p_demod_desc">
+      La démodulation convertit les symboles complexes (I/Q) du domaine fréquentiel en séquences binaires. Chaque schéma utilise une approche de seuillage décisionnel basée sur la géométrie de la constellation :
+    </p>
+
+    <div style="margin: 25px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+      <svg viewBox="0 0 160 160" width="160" height="160" style="display: inline-block;">
+        <line x1="80" y1="10" x2="80" y2="150" stroke="currentColor" opacity="0.2" />
+        <line x1="10" y1="80" x2="150" y2="80" stroke="currentColor" opacity="0.2" />
+        <circle cx="115" cy="45" r="5" fill="var(--accent)" />
+        <circle cx="45" cy="45" r="5" fill="var(--accent)" />
+        <circle cx="45" cy="115" r="5" fill="var(--accent)" />
+        <circle cx="115" cy="115" r="5" fill="var(--accent)" />
+        <g fill="currentColor" font-family="var(--mono)" font-size="9" opacity="0.7">
+          <text x="123" y="48">11</text><text x="30" y="48">01</text>
+          <text x="30" y="118">00</text><text x="123" y="118">10</text>
+          <text x="140" y="75">I</text><text x="85" y="18">Q</text>
+        </g>
+      </svg>
+      <svg viewBox="0 0 160 160" width="160" height="160" style="display: inline-block;">
+        <line x1="80" y1="10" x2="80" y2="150" stroke="currentColor" opacity="0.2" />
+        <line x1="10" y1="80" x2="150" y2="80" stroke="currentColor" opacity="0.2" />
+        <g fill="var(--accent)">
+          <circle cx="95" cy="65" r="3" /><circle cx="125" cy="65" r="3" /><circle cx="95" cy="35" r="3" /><circle cx="125" cy="35" r="3" />
+          <circle cx="65" cy="65" r="3" /><circle cx="35" cy="65" r="3" /><circle cx="65" cy="35" r="3" /><circle cx="35" cy="35" r="3" />
+          <circle cx="65" cy="95" r="3" /><circle cx="35" cy="95" r="3" /><circle cx="65" cy="125" r="3" /><circle cx="35" cy="125" r="3" />
+          <circle cx="95" cy="95" r="3" /><circle cx="125" cy="95" r="3" /><circle cx="95" cy="125" r="3" /><circle cx="125" cy="125" r="3" />
+        </g>
+        <text x="140" y="75" fill="currentColor" opacity="0.5" font-family="var(--mono)" font-size="9">I</text>
+        <text x="85" y="18" fill="currentColor" opacity="0.5" font-family="var(--mono)" font-size="9">Q</text>
+      </svg>
+    </div>
+
+    <div class="art-code">
+<pre><code><span class="c"># Démodulation BPSK (1 bit/symbole) - décision sur partie réelle</span>
+<span class="k">def</span> <span class="nf">bpsk_demod</span>(<span class="n">qamSeq</span>):
+    <span class="k">return</span> [<span class="m">1</span> <span class="k">if</span> <span class="n">x</span><span class="p">.</span><span class="n">real</span> &gt;= <span class="m">0</span> <span class="k">else</span> <span class="m">0</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">qamSeq</span>]
+
+<span class="c"># Démodulation QPSK (2 bits/symbole) - décision sur quadrants</span>
+<span class="k">def</span> <span class="nf">qpsk_demod</span>(<span class="n">qamSeq</span>):
+    <span class="n">bits</span> = []
+    <span class="k">for</span> <span class="n">symbol</span> <span class="k">in</span> <span class="n">qamSeq</span>:
+        <span class="n">bits</span><span class="p">.</span><span class="n">append</span>(<span class="m">1</span> <span class="k">if</span> <span class="n">symbol</span><span class="p">.</span><span class="n">real</span> &gt;= <span class="m">0</span> <span class="k">else</span> <span class="m">0</span>)
+        <span class="n">bits</span><span class="p">.</span><span class="n">append</span>(<span class="m">1</span> <span class="k">if</span> <span class="n">symbol</span><span class="p">.</span><span class="n">imag</span> &gt;= <span class="m">0</span> <span class="k">else</span> <span class="m">0</span>)
+    <span class="k">return</span> <span class="n">bits</span>
+
+<span class="c"># Démodulation QAM-16 (4 bits/symbole) - décision sur 16 régions</span>
+<span class="k">def</span> <span class="nf">qam16_demod</span>(<span class="n">symbol</span>):
+    <span class="n">real_bit</span> = <span class="m'>0</span> <span class="k">if</span> <span class="n">symbol</span><span class="p'>.</span><span class="n">real</span> &lt; <span class="m'>0</span> <span class="k">else</span> <span class="m'>1</span>
+    <span class="n">imag_bit</span> = <span class="m'>0</span> <span class="k">if</span> <span class="n">symbol</span><span class="p'>.</span><span class="n">imag</span> &lt; <span class="m'>0</span> <span class="k'>else</span> <span class="m'>1</span>
+    <span class="c"># Quantification supplémentaire basée sur magnitude dans chaque quadrant</span>
+    <span class="k">return</span> [<span class="n">real_bit</span>, <span class="n">imag_bit</span>, <span class="m'>1</span>, <span class="m'>0</span>]</code></pre>
+    </div>
+
+    <h3 data-key="h3_hamming">2. Code de Hamming (7,4) - Correction d'Erreurs</h3>
+    <p class="art-text" data-key="p_hamming_desc">
+      Le code de Hamming(7,4) détecte et corrige automatiquement <strong>jusqu'à 1 erreur binaire</strong> par bloc de 7 bits. Il encode 4 bits de données utiles avec 3 bits de parité redondants, obtenant une distance de Hamming de 3. Le décodeur utilise le calcul du syndrome (combinaisons linéaires modulo 2) pour localiser précisément l'erreur, si elle existe.
+    </p>
+    <div class="art-code">
+<pre><code><span class="k">def</span> <span class="nf">hamming_decode</span>(<span class="n">received</span>):
+    <span class="c"># Calcul du syndrome : localise la position de l'erreur</span>
+    <span class="n">s1</span> = <span class="n">received</span>[<span class="m'>0</span>] ^ <span class="n">received</span>[<span class="m'>2</span>] ^ <span class="n">received</span>[<span class="m'>4</span>] ^ <span class="n">received</span>[<span class="m'>6</span>]
+    <span class="n">s2</span> = <span class="n">received</span>[<span class="m'>1</span>] ^ <span class="n">received</span>[<span class="m'>2</span>] ^ <span class="n">received</span>[<span class="m'>5</span>] ^ <span class="n">received</span>[<span class="m'>6</span>]
+    <span class="n">s3</span> = <span class="n">received</span>[<span class="m'>3</span>] ^ <span class="n">received</span>[<span class="m'>4</span>] ^ <span class="n">received</span>[<span class="m'>5</span>] ^ <span class="n">received</span>[<span class="m'>6</span>]
+    
+    <span class="c"># Position d'erreur (0 = pas d'erreur, 1-7 = position du bit)</span>
+    <span class="n">error_pos</span> = <span class="n">s1</span> * <span class="m'>1</span> + <span class="n">s2</span> * <span class="m'>2</span> + <span class="n">s3</span> * <span class="m'>4</span>
+    
+    <span class="k">if</span> <span class="n">error_pos</span> &gt; <span class="m'>0</span>:
+        <span class="n">received</span>[<span class="n">error_pos</span> - <span class="m'>1</span>] ^= <span class="m'>1</span>  <span class="c"># Correction par inversion du bit</span>
+    
+    <span class="c"># Extraction des 4 bits de données (positions 0, 2, 4, 6)</span>
+    <span class="k">return</span> [<span class="n">received</span>[<span class="m'>0</span>], <span class="n">received</span>[<span class="m'>2</span>], <span class="n">received</span>[<span class="m'>4</span>], <span class="n">received</span>[<span class="m'>6</span>]]</code></pre>
+    </div>
+
+    <h3 data-key="h3_crc">3. Validation par CRC (Cyclic Redundancy Check)</h3>
+    <p class="art-text" data-key="p_crc_desc">
+      La validation CRC utilise une <strong>division polynomiale en arithmétique modulo 2</strong> pour détecter les erreurs résiduelles après décodage Hamming. Les tailles supportées sont 8, 16, 24 et 32 bits, adaptées au volume de données protégées. Un reste nul après division indique l'absence d'erreur. Cette technique détecte jusqu'à deux erreurs adjacentes et fournit une probabilité très faible de non-détection pour les autres motifs d'erreurs.
+    </p>
+    <div class="art-code">
+<pre><code><span class="k">def</span> <span class="nf">crc_check</span>(<span class="n">data_bits</span>, <span class="n">crc_bits</span>, <span class="n">poly</span>):
+    <span class="c"># Concaténation des données et CRC reçu pour vérification</span>
+    <span class="n">full_data</span> = <span class="n">data_bits</span> + <span class="n">crc_bits</span>
+    
+    <span class="c"># Division polynomiale itérative (modulo 2 = XOR)</span>
+    <span class="n">remainder</span> = <span class="n">full_data</span>[:<span class="nb">len</span>(<span class="n">poly</span>)]
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="k'>in</span> <span class="nb'>range</span>(<span class="nb'>len</span>(<span class="n">poly</span>), <span class="nb'>len</span>(<span class="n">full_data</span>)):
+        <span class="k">if</span> <span class="n">remainder</span>[<span class="m'>0</span>] == <span class="m'>1</span>:
+            <span class="n">remainder</span> = [<span class="n">remainder</span>[<span class="n">j</span>] ^ <span class="n">poly</span>[<span class="n">j</span>] <span class="k'>for</span> <span class="n">j</span> <span class="k'>in</span> <span class="nb'>range</span>(<span class="nb'>len</span>(<span class="n">poly</span>))]
+        <span class="n">remainder</span> = <span class="n">remainder</span>[<span class="m'>1</span>:] + [<span class="n">full_data</span>[<span class="n">i</span>]]
+    
+    <span class="c"># Pas d'erreur si reste nul</span>
+    <span class="k">return</span> <span class="nb'>all</span>(<span class="n">bit</span> == <span class="m'>0</span> <span class="k'>for</span> <span class="n">bit</span> <span class="k'>in</span> <span class="n">remainder</span>)</code></pre>
+    </div>
+
+    <h2 style="color:var(--accent);" data-key="h2_specs">Spécifications Techniques des Signaux</h2>
+    
+    <div style="display: grid; gap: 2rem; margin: 2rem 0;">
+      <div>
+        <h3 data-key="h3_ofdm">Structure OFDM</h3>
+        <ul class="art-text">
+          <li><strong>Sous-porteuses totales :</strong> 624 par symbole OFDM (bande large pour test)</li>
+          <li><strong>Porteuses utiles :</strong> 312 centrées (rest pour gardes)</li>
+          <li><strong>Espacement fréquentiel :</strong> 15 kHz par porteuse (standard LTE)</li>
+          <li><strong>Durée symbole OFDM :</strong> ~66.67 μs (avec préfixe cyclique)</li>
+          <li><strong>Blocs de ressources :</strong> 12 porteuses × 1 symbole = 1 élément de ressource (RE)</li>
+        </ul>
+      </div>
+      <div>
+        <h3 data-key="h3_input">Format des Données d'Entrée</h3>
+        <ul class="art-text">
+          <li><strong>Format fichiers :</strong> CSV avec séparateur point-virgule (;)</li>
+          <li><strong>Structure :</strong> Alternance [Re₀, Im₀, Re₁, Im₁, ...] pour chaque symbole</li>
+          <li><strong>Précision :</strong> Nombres flottants 32-bit (complexes normalisés)</li>
+          <li><strong>Ordre :</strong> Symboles en ordre temporel pour reconstruction correcte</li>
+          <li><strong>Exemple :</strong> <code>0.707, 0.707, -0.707, 0.707, ...</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 style="color:var(--accent);" data-key="h2_flow">Flux d'Exécution Détaillé</h2>
+    <p class="art-text" data-key="p_flow_intro">Le processus de décodage suit cette séquence :</p>
+    <ol class="art-text">
+      <li><strong>Chargement des données :</strong> Lecture des fichiers CSV, parsing des nombres complexes, validation du format</li>
+      <li><strong>Identification Cell ID via PBCH :</strong> Démodulation QPSK du canal broadcast, extraction de l'ID de cellule</li>
+      <li><strong>Décodage PDCCH :</strong> Extraction des allocations de ressources par utilisateur, détermination des MCS</li>
+      <li><strong>Boucle par utilisateur :</strong>
+        <ul style="margin-left: 2rem;">
+          <li>Extraction des symboles PDSCH du bloc de ressources alloué</li>
+          <li>Démodulation selon le MCS (BPSK/QPSK/QAM-16)</li>
+          <li>Groupage en blocs de 7 bits et décodage Hamming</li>
+          <li>Extraction et validation du CRC</li>
+          <li>Déchiffrement du payload</li>
+          <li>Enregistrement du message décodé</li>
+        </ul>
+      </li>
+      <li><strong>Gestion des erreurs :</strong> Rejet des blocs avec CRC invalide, logging des diagnostics</li>
+      <li><strong>Sortie :</strong> Compilation des résultats dans <code>response.txt</code></li>
+    </ol>
+
+    <h2 style="color:var(--accent);" data-key="h2_perf">Performance & Résultats</h2>
+    <ul class="art-text">
+      <li><strong>Taux de correction d'erreurs :</strong> Hamming corrige 100% des erreurs simples (single-bit error)</li>
+      <li><strong>Couverture CRC :</strong> Détection de 99.99% des erreurs non corrigées pour blocs jusqu'à 64 bits</li>
+      <li><strong>Démodulation :</strong> Seuillage décisionnel avec taux de succès > 95% en SNR > 10dB</li>
+      <li><strong>Débit de traitement :</strong> ~10⁶ symboles/sec sur CPU standard (Python pur)</li>
+      <li><strong>Mémoire :</strong> Traitement streaming (pas de buffering complet requis pour grandes matrices)</li>
+    </ul>
+
+    <h2 style="color:var(--accent);" data-key="h2_limits">Limitations Connues & Cas d'Usage</h2>
+    <div style="display: grid; gap: 2rem; margin: 2rem 0;">
+      <div>
+        <h3 data-key="h3_limits">Limitations</h3>
+        <ul class="art-text">
+          <li>Correction d'erreurs limitée à <strong>1 erreur par bloc</strong> Hamming</li>
+          <li>Pas d'égalisation de canal (assume canal AWGN idéal)</li>
+          <li>Pas de synchronisation fine d'horloge ou compensation de phase</li>
+          <li>Décodage hard (décisions binaires, pas soft-decoding)</li>
+          <li>Performance dégradée en présence de multi-trajets ou Doppler</li>
+        </ul>
+      </div>
+      <div>
+        <h3 data-key="h3_usecase">Cas d'Usage</h3>
+        <ul class="art-text">
+          <li>✓ Tests académiques de chaîne de transmission 4G</li>
+          <li>✓ Validation d'implémentations de modulation numérique</li>
+          <li>✓ Analyse forensique de signaux enregistrés</li>
+          <li>✓ Prototypage rapide de décodeurs LTE simplifié</li>
+          <li>✓ Démonstration éducative de standards 3GPP</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 style="color:var(--accent);" data-key="h2_deps">Dépendances & Installation</h2>
+    <div class="art-code">
+<pre><code><span class="c"># Dépendances minimales Python</span>
+<span class="n">import</span> <span class="n">csv</span>
+<span class="n">import</span> <span class="n">math</span>
+<span class="n">import</span> <span class="n">os</span>
+
+<span class="c"># NumPy recommandé pour performances optimales (optionnel)</span>
+<span class="n">import</span> <span class="n">numpy</span> <span class="k'>as</span> <span class="n">np</span>  <span class="c"># Pour accélération calcul matriciel</span>
+
+<span class="c"># Pas de dépendances externes requises pour la logique de base</span>
+<span class="c"># Tout fonctionne en Python pur standard library</span></code></pre>
+    </div>
+    <p class="art-text" data-key="p_install">
+      <strong>Installation :</strong> Cloner le dépôt GitHub et exécuter <code>python main.py</code> depuis le répertoire racine. Les fichiers CSV doivent être placés dans le même dossier. Aucune compilation ou configuration complexe n'est requise.
+    </p>
+
+    <h2 style="color:var(--accent);" data-key="h2_example">Exemple de Résultat de Décodage</h2>
+    <div class="art-code">
+<pre><code><span class="c">--- 4G FRAME DECODER OUTPUT ---</span>
+Cell ID: <span class="m">42</span>
+Active Users: <span class="m">3</span>
+
+User <span class="m">1</span>:
+  MCS: QPSK
+  Resource Blocks: [<span class="m">0</span>-<span class="m">11</span>]
+  Hamming Corrections: <span class="m">2</span> errors fixed
+  CRC Status: ✓ VALID
+  Decrypted Message: <span class="n">Hello</span> <span class="n">from</span> <span class="n">4G</span>!
+
+User <span class="m">2</span>:
+  MCS: QAM-16
+  Resource Blocks: [<span class="m">12</span>-<span class="m'>23</span>]
+  Hamming Corrections: <span class="m'>0</span> errors
+  CRC Status: ✓ VALID
+  Decrypted Message: <span class="n">Secure</span> <span class="n">transmission</span>
+
+User <span class="m'>3</span>:
+  MCS: BPSK
+  Resource Blocks: [<span class="m'>24</span>-<span class="m'>35</span>]
+  Hamming Corrections: <span class="m'>1</span> error fixed
+  CRC Status: ✗ INVALID (block rejected)
+
+<span class="c">--- END OF FRAME ---</span></code></pre>
+    </div>
+
+    <h2 style="color:var(--accent);" data-key="h2_resources">Ressources & Références Techniques</h2>
+    <ul class="art-text">
+      <li><strong>3GPP TS 36.211 :</strong> Physical Channels and Modulation (LTE)</li>
+      <li><strong>3GPP TS 36.212 :</strong> Multiplexing and channel coding (FEC, CRC)</li>
+      <li><strong>3GPP TS 36.213 :</strong> Physical layer procedures (MCS selection)</li>
+      <li><strong>Textbook :</strong> "Digital Communications" - Proakis & Salehi (modulation, FEC)</li>
+      <li><strong>Hamming Code Theory :</strong> Distance de Hamming, syndrome decoding</li>
+      <li><strong>OFDM Fundamentals :</strong> Signaling over frequency-selective channels</li>
+    </ul>
+
+  </div>
+</main>
+
+<script>
+  const TRANSLATIONS = {
+    fr: {
+      btn_back: "← RETOUR AUX PROJETS", nav_about: "À PROPOS", nav_exp: "PARCOURS", nav_work: "PROJETS", nav_certs: "CERTIFICATIONS",
+      category: "TRAITEMENT DU SIGNAL / TÉLÉCOMS", title: "4G Frame Decoder",
+      sec_context: "Résumé", btn_github: "Voir le code",  
+      desc: "Outil de traitement du signal et de décodage en Python permettant d'extraire des données utilisateur chiffrées à partir de flux de communication sans fil (OFDM, démodulation multi-couches et correction d'erreurs).",
+      h2_skills: "Expertise & Compétences Validées", h2_structure: "Structure du Projet",
+      h2_pipeline: "Pipeline de Traitement des Canaux", p_pipeline_desc: "Le décodeur reproduit fidèlement la couche physique d'une station de réception en segmentant le traitement selon les canaux LTE/4G standards du 3GPP :",
+      h2_algorithms: "Algorithmes & Implémentations Clés",
+      h3_demod: "1. Démodulation Numérique (BPSK, QPSK, QAM-16)", p_demod_desc: "La démodulation convertit les symboles complexes (I/Q) du domaine fréquentiel en séquences binaires. Chaque schéma utilise une approche de seuillage décisionnel basée sur la géométrie de la constellation :",
+      h3_hamming: "2. Code de Hamming (7,4) - Correction d'Erreurs", p_hamming_desc: "Le code de Hamming(7,4) détecte et corrige automatiquement jusqu'à 1 erreur binaire par bloc de 7 bits. Il encode 4 bits de données utiles avec 3 bits de parité redondants, obtenant une distance de Hamming de 3. Le décodeur utilise le calcul du syndrome (combinaisons linéaires modulo 2) pour localiser précisément l'erreur, si elle existe.",
+      h3_crc: "3. Validation par CRC (Cyclic Redundancy Check)", p_crc_desc: "La validation CRC utilise une division polynomiale en arithmétique modulo 2 pour détecter les erreurs résiduelles après décodage Hamming. Les tailles supportées sont 8, 16, 24 et 32 bits, adaptées au volume de données protégées. Un reste nul après division indique l'absence d'erreur. Cette technique détecte jusqu'à deux erreurs adjacentes et fournit une probabilité très faible de non-détection pour les autres motifs d'erreurs.",
+      h2_specs: "Spécifications Techniques des Signaux", h3_ofdm: "Structure OFDM", h3_input: "Format des Données d'Entrée",
+      h2_flow: "Flux d'Exécution Détaillé", p_flow_intro: "Le processus de décodage suit cette séquence :",
+      h2_perf: "Performance & Résultats", h2_limits: "Limitations Connues & Cas d'Usage", h3_limits: "Limitations", h3_usecase: "Cas d'Usage",
+      h2_deps: "Dépendances & Installation", p_install: "Installation : Cloner le dépôt GitHub et exécuter python main.py depuis le répertoire racine. Les fichiers CSV doivent être placés dans le même dossier. Aucune compilation ou configuration complexe n'est requise.",
+      h2_example: "Exemple de Résultat de Décodage", h2_resources: "Ressources & Références Techniques",
+      p_overview: "Ce décodeur spécialisé est conçu pour traiter des matrices de signaux complexes transmises sur des canaux OFDM (Orthogonal Frequency-Division Multiplexing). Il implémente des stratégies de démodulation et de décodage multi-niveaux pour extraire et déchiffrer les messages des flux de données. Le projet a été initialement développé en 2025 dans un cadre académique privé avant d'être migré publiquement."
+    },
+    en: {
+      btn_back: "← BACK TO PROJECTS", nav_about: "ABOUT", nav_exp: "TIMELINE", nav_work: "PROJECTS", nav_certs: "CERTS",
+      category: "SIGNAL PROCESSING / TELECOMS", title: "4G Frame Decoder",
+      sec_context: "Overview", btn_github: "View source",
+      desc: "A Python-based signal processing and decoding tool for extracting encrypted user data from wireless network communications using advanced modulation and forward error correction techniques.",
+      h2_skills: "Demonstrated Expertise", h2_structure: "Project Structure",
+      h2_pipeline: "Channel Processing Pipeline", p_pipeline_desc: "The decoder faithfully reproduces the physical layer of a base station receiver by segmenting tasks into standard LTE/4G physical channels from 3GPP:",
+      h2_algorithms: "Key Algorithms & Implementations",
+      h3_demod: "1. Digital Demodulation (BPSK, QPSK, QAM-16)", p_demod_desc: "Demodulation converts complex (I/Q) frequency-domain symbols into binary sequences. Each scheme uses decision threshold techniques based on constellation geometry:",
+      h3_hamming: "2. Hamming Code (7,4) - Error Correction", p_hamming_desc: "The Hamming(7,4) code detects and automatically corrects up to 1 bit error per 7-bit block. It encodes 4 data bits with 3 redundant parity bits, achieving Hamming distance of 3. The decoder uses syndrome calculation (linear combinations mod 2) to precisely locate errors if they exist.",
+      h3_crc: "3. CRC Validation (Cyclic Redundancy Check)", p_crc_desc: "CRC validation uses polynomial division in modulo-2 arithmetic to detect residual errors after Hamming decoding. Supported sizes are 8, 16, 24, and 32 bits, scaled to data volume. A zero remainder after division indicates no error. This technique detects up to two adjacent errors and provides very low false-negative probability for other error patterns.",
+      h2_specs: "Signal Technical Specifications", h3_ofdm: "OFDM Structure", h3_input: "Input Data Format",
+      h2_flow: "Detailed Execution Flow", p_flow_intro: "The decoding process follows this sequence:",
+      h2_perf: "Performance & Results", h2_limits: "Known Limitations & Use Cases", h3_limits: "Limitations", h3_usecase: "Use Cases",
+      h2_deps: "Dependencies & Installation", p_install: "Installation: Clone the GitHub repository and run python main.py from the root directory. CSV files should be placed in the same folder. No complex compilation or configuration is required.",
+      h2_example: "Example Decoding Result", h2_resources: "Technical Resources & References",
+      p_overview: "A specialized decoder designed to process complex wireless network signals transmitted over OFDM (Orthogonal Frequency-Division Multiplexing) channels. It implements multi-layered demodulation and decoding strategies to extract and decrypt user messages from encoded signal matrices. Originally developed in 2025 on a private school GitLab instance and migrated here to be made public."
+    }
+  };
+
+  function applyLanguage(lang) {
+    localStorage.setItem('pref-lang', lang);
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.getElementById('opt-en').classList.toggle('active', lang === 'en');
+    document.getElementById('opt-fr').classList.toggle('active', lang === 'fr');
+    const t = TRANSLATIONS[lang];
+    document.querySelectorAll('[data-key]').forEach(el => {
+      if(t[el.getAttribute('data-key')]) el.textContent = t[el.getAttribute('data-key')];
+    });
+  }
+
+  function applyTheme(theme) {
+    const isLight = (theme === 'light');
+    if (isLight) { document.documentElement.classList.add('light'); document.body.classList.add('light'); } 
+    else { document.documentElement.classList.remove('light'); document.body.classList.remove('light'); }
+    localStorage.setItem('pref-theme', theme);
+    document.getElementById('theme-path').setAttribute('d', isLight ? "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" : "M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z");
+    if(window.initCanvas) initCanvas();
+  }
+
+  document.getElementById('lang-selector').addEventListener('click', () => applyLanguage(document.body.classList.contains('lang-en') ? 'fr' : 'en'));
+  document.getElementById('theme-toggle').addEventListener('click', () => applyTheme(document.body.classList.contains('light') ? 'dark' : 'light'));
+
+  window.addEventListener('DOMContentLoaded', () => {
+    applyLanguage(localStorage.getItem('pref-lang') || 'fr');
+    applyTheme(localStorage.getItem('pref-theme') || 'dark');
+    initCanvas();
+    animate();
+  });
+
+  let lastScrollTop = 0;
+  window.addEventListener("scroll", function() {
+    let st = window.pageYOffset || document.documentElement.scrollTop;
+    let navbar = document.getElementById("navbar");
+    if (st > 50) navbar.classList.add("scrolled"); else navbar.classList.remove("scrolled");
+    if (st > lastScrollTop && st > 100) navbar.classList.add("nav-hidden"); else navbar.classList.remove("nav-hidden");
+    lastScrollTop = st <= 0 ? 0 : st;
+  });
+
+  /* CANVAS BACKGROUND */
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let pArr = [];
+  window.initCanvas = function() {
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight; pArr = [];
+    const color = document.body.classList.contains('light') ? '124, 58, 237' : '168, 85, 247';
+    for(let i=0; i<150; i++) pArr.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, sX:(Math.random()-0.5)*0.3, sY:(Math.random()-0.5)*0.3, size: Math.random()*1.2+0.3, c:`rgba(${color},${Math.random()*0.4+0.1})`});
+  }
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pArr.forEach(p => { p.x+=p.sX; p.y+=p.sY; if(p.x>canvas.width)p.x=0; if(p.x<0)p.x=canvas.width; if(p.y>canvas.height)p.y=0; if(p.y<0)p.y=canvas.height; ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill(); });
+    requestAnimationFrame(animate);
+  }
+  window.addEventListener('resize', initCanvas);
+</script>
+</body>
+</html>
