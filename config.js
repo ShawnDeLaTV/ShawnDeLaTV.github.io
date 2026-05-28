@@ -140,7 +140,38 @@ const TRANSLATIONS = {
 };
 
 const STACK_DATA = [
-    { cat: "Cloud & Infra", items: [{ name: "AWS", icon: "images/logo/aws.png" }, { name: "Azure", icon: "images/logo/azure.png" }, { name: "Terraform", icon: "images/logo/terraform.png" }] },
-    { cat: "Sécurité & Défense", items: [{ name: "Burp Suite", icon: "https://cdn.simpleicons.org/burpsuite/white" }] },
-    { cat: "Automation & DevOps", items: [{ name: "Python", icon: "https://cdn.simpleicons.org/python/white" }, { name: "Java", icon: "images/logo/java.png" }, { name: "C", icon: "images/logo/c.png" }, { name: "Bash", icon: "https://cdn.simpleicons.org/gnubash/white" }, { name: "Docker", icon: "https://cdn.simpleicons.org/docker/white" }, { name: "GitHub", icon: "https://cdn.simpleicons.org/githubactions/white" }] }
+    { 
+        cat: "Cloud & DevOps", 
+        items: [
+            { name: "AWS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" }, // Vrai logo AWS couleur
+            { name: "Azure", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" }, // Ajouté avec le vrai logo en couleur !
+            { name: "Terraform", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" },
+            { name: "Kubernetes", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" },
+            { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
+            { name: "GitHub Actions", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/githubactions/githubactions-original.svg" },
+            { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" }
+        ] 
+    },
+    { 
+        cat: "Cybersecurity & Networks", 
+        items: [
+            { name: "Burp Suite", icon: "https://cdn.simpleicons.org/burpsuite/%23FF6600" }, 
+            { name: "OWASP", icon: "https://cdn.simpleicons.org/owasp/%23000000" },
+            { name: "Authelia", icon: "https://cdn.simpleicons.org/authelia/%23F7B05B" }, 
+            { name: "MFA / 2FA", icon: "https://cdn.simpleicons.org/googleauthenticator/%234285F4" }, // Vrai logo couleur de Google Authenticator
+            { name: "TLS / HTTPS", icon: "https://cdn.simpleicons.org/letsencrypt/%23003A70" }, 
+            { name: "TCP/IP & 4G", icon: "https://cdn.simpleicons.org/wireshark/%231679A7" } // Vrai logo couleur bleu de Wireshark
+        ] 
+    },
+    { 
+        cat: "Languages & Systems", 
+        items: [
+            { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" }, 
+            { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+            { name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" }, 
+            { name: "Bash", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" }, 
+            { name: "C", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" }, 
+            { name: "Linux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" }
+        ] 
+    }
 ];
