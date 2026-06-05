@@ -9,7 +9,12 @@ const TRANSLATIONS = {
         footer_text: "Designé & Développé par Matthieu Sonzogni avec l'aide de Gemini.",
         about_bio: "Futur ingénieur diplômé en août 2026, mon parcours est marqué par un double diplôme exigeant et une mobilité internationale qui a profondément enrichi ma vision technique et humaine. Cette expérience à l'étranger m'a permis de développer une grande adaptabilité et de confronter mes méthodes de travail à des standards globaux, renforçant ainsi ma capacité à évoluer dans des environnements complexes.<br><br>Je me spécialise aujourd'hui dans la protection des infrastructures sur Amazon Web Services. Au-delà des connaissances acquises lors de mes stages, j'approfondis constamment mon expertise à travers la réalisation de projets personnels concrets. Je maîtrise l'automatisation via Terraform pour bâtir des environnements immuables au sein de l'écosystème AWS, en mettant un accent particulier sur l'isolation des réseaux et la gestion rigoureuse des identités.<br><br>Mon objectif est de transformer les exigences de sécurité et de conformité en véritables leviers d'agilité pour les entreprises. Passionné par la défense des systèmes modernes, je m'oriente vers les métiers de l'ingénierie sécurité cloud et je suis activement à la recherche de mon premier défi professionnel pour septembre 2026.<br><br>J'espère que vous allez apprécier mon portfolio.",
         exp: [
-            { date: "MAI 2026 — AOÛT 2026", title: "Analyste Sécurité Cloud & SSDLC - Stage", co: "Banque de Développement du Canada (BDC)", desc: "[A venir]" },
+            { 
+                date: "MAI 2026 — AOÛT 2026", 
+                title: "Analyste Sécurité Cloud & SSDLC - Stage", 
+                co: "Banque de Développement du Canada (BDC)", 
+                desc: "<b>• IAM Hardening :</b> Amélioration de la posture de sécurité des identités AWS en exploitant Cloudsplaining pour détecter les rôles sur-privilégiés, et intégration du refactoring assisté par IA pour accélérer la remédiation vers des politiques IAM de moindre privilège.<br><b>• Secure Code Review :</b> Audit de code source Go, Java, Rust et C++ pour détecter les failles d'implémentation, en collaboration avec les équipes de développement pour corriger les vulnérabilités avant le déploiement.<br><b>• Supply Chain Security :</b> Protection des logiciels internes contre les attaques de la chaîne d'approvisionnement en intégrant des vérifications automatisées de dépendances dans le pipeline de sécurité pour bloquer les bibliothèques obsolètes ou non maintenues.<br>" 
+            },
             { date: "JUIN 2025 — AOÛT 2025", title: "Pentester - Stage", co: "BNP Paribas", desc: "<b>• Audits Offensifs (Web & API) :</b> Réalisation de tests d’intrusion sur des applications bancaires en environnement de qualification pour identifier des failles critiques.<br><b>• Analyse de Logique Métier :</b> Détection de vulnérabilités via des tests manuels et automatisés (Burp Suite, OWASP ZAP) visant les flux de données sensibles.<br><b>• Expertise Conseil & Remédiation :</b> Accompagnement technique des équipes de développement pour l'implémentation de correctifs de sécurité et le renforcement du code.<br><b>• Validation de Sécurité :</b> Réalisation de contre-audits systématiques pour certifier la résolution effective des failles avant la mise en production des services.<br>" },
             { date: "2022 — 2025", 
               title: "Professeur Particulier Scientifique", 
@@ -90,7 +95,12 @@ const TRANSLATIONS = {
         footer_text: "Designed & Developed by Matthieu Sonzogni with Gemini's help.",
         about_bio: "As a future Graduate Engineer (completing in August 2026), my academic path is shaped by a demanding dual degree and international mobility that has deeply enriched both my technical and personal perspective. This experience abroad allowed me to develop strong adaptability and test my methodologies against global standards, strengthening my ability to operate within complex environments.<br><br>Today, I specialize in securing infrastructures on Amazon Web Services. Moving beyond the knowledge built during my internships, I constantly sharpen my expertise by developing concrete personal projects. I master automation via Terraform to build immutable environments within the AWS ecosystem, placing a strict emphasis on network isolation and rigorous identity management.<br><br>My objective is to transform security and compliance requirements into true drivers of business agility. Passionate about defending modern architectures, I am steering my career toward Cloud Security Engineering and am actively seeking my first professional challenge starting September 2026.<br><br>I hope you enjoy exploring my portfolio.",
         exp: [
-            { date: "MAY 2026 — AUGUST 2026", title: "Cloud Security & SSDLC Analyst - Internship", co: "Business Development Bank of Canada (BDC)", desc: "[Coming soon]" },
+            { 
+                date: "MAY 2026 — AUGUST 2026", 
+                title: "Cloud Security & SSDLC Analyst - Internship", 
+                co: "Business Development Bank of Canada (BDC)", 
+                desc: "<b>• IAM Hardening:</b> Enhanced AWS identity security posture by leveraging Cloudsplaining to detect over-privileged roles, and integrated AI-assisted refactoring to accelerate remediation toward least-privilege IAM policies.<br><b>• Secure Code Review:</b> Audited Go, Java, Rust, and C++ source code to identify implementation flaws, collaborating with development teams to remediate vulnerabilities prior to deployment.<br><b>• Supply Chain Security:</b> Protected internal software against supply chain attacks by embedding automated dependency scanning into the security pipeline to block obsolete or unmaintained libraries.<br>" 
+            },
             { date: "JUNE 2025 — AUGUST 2025", title: "Pentester - Internship", co: "BNP Paribas", desc: "<b>• Offensive Audits (Web & API):</b> Conducted penetration testing on banking applications within staging environments to identify critical vulnerabilities.<br><b>• Business Logic Analysis:</b> Detected security flaws using manual and automated testing tools (Burp Suite, OWASP ZAP) targeting sensitive data flows.<br><b>• Remediation Advisory:</b> Provided technical guidance to development teams for implementing security patches and hardening code repositories.<br><b>• Security Validation:</b> Performed systematic re-testing to certify effective vulnerability resolution prior to production deployments.<br>" },
             { date: "2022 — 2025", 
               title: "Private STEM Tutor", 
@@ -129,6 +139,30 @@ const TRANSLATIONS = {
                 url: "projects/build-in-progress.html",
                 tags: ["Docker", "SSO", "Authelia", "Nginx"], 
                 image: "images/p-sso-authelia.png" 
+            },
+            { 
+                title: "4G Frame Decoder", 
+                desc: "<b>2025</b><br><br>4G frame decoder designed for the analysis of mobile communications.<br><br>", 
+                github: "https://github.com/ShawnDeLaTV/python-4g-frame-decoder", 
+                url: "projects/build-in-progress.html",
+                tags: ["Python", "Network", "SignalProcessing"], 
+                image: "images/p-4G-frame-decoder.png" 
+            },
+            { 
+                title: "NilNovi Language Compiler", 
+                desc: "<b>2025</b><br><br>Compiler built for a simplified procedural and functional programming language.<br><br>", 
+                github: "https://github.com/ShawnDeLaTV/python-nilnovi-compiler/", 
+                url: "projects/build-in-progress.html",
+                tags: ["Python", "Compiler"], 
+                image: "images/p-nilnovi-compiler.png" 
+            },
+            { 
+                title: "Community Minecraft Mod Development", 
+                desc: "<b>2021-2023</b><br><br>Developed custom mods for the 'BuildYourStory' community based on a Harry Potter theme.<br>(Access lost to this GitHub account)", 
+                github: "https://github.com/ShawnDeLaTV/minecraft-mods", 
+                url: "projects/build-in-progress.html",
+                tags: ["Java", "Minecraft"], 
+                image: "images/p-minecraft-mods.png" 
             }
         ],
         certs: [
@@ -143,8 +177,8 @@ const STACK_DATA = [
     { 
         cat: "Cloud & DevOps", 
         items: [
-            { name: "AWS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" }, // Vrai logo AWS couleur
-            { name: "Azure", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" }, // Ajouté avec le vrai logo en couleur !
+            { name: "AWS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" }, 
+            { name: "Azure", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" }, 
             { name: "Terraform", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" },
             { name: "Kubernetes", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" },
             { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
@@ -158,9 +192,9 @@ const STACK_DATA = [
             { name: "Burp Suite", icon: "https://cdn.simpleicons.org/burpsuite/%23FF6600" }, 
             { name: "OWASP", icon: "https://cdn.simpleicons.org/owasp/%23000000" },
             { name: "Authelia", icon: "https://cdn.simpleicons.org/authelia/%23F7B05B" }, 
-            { name: "MFA / 2FA", icon: "https://cdn.simpleicons.org/googleauthenticator/%234285F4" }, // Vrai logo couleur de Google Authenticator
+            { name: "MFA / 2FA", icon: "https://cdn.simpleicons.org/googleauthenticator/%234285F4" }, 
             { name: "TLS / HTTPS", icon: "https://cdn.simpleicons.org/letsencrypt/%23003A70" }, 
-            { name: "TCP/IP & 4G", icon: "https://cdn.simpleicons.org/wireshark/%231679A7" } // Vrai logo couleur bleu de Wireshark
+            { name: "TCP/IP & 4G", icon: "https://cdn.simpleicons.org/wireshark/%231679A7" } 
         ] 
     },
     { 

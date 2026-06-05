@@ -1,78 +1,73 @@
 const CHEATSHEET_DATA = {
-    fr: [
+  fr: [
+    {
+      category: "AWS Solutions Architect Associate Certification",
+      memos: [
         {
-          category: "HashiCorp Terraform",
-          memos: [
-            {
-              title: "Gestion fine des blocs Lifecycle",
-              tags: ["IaC", "Production"],
-              search: "terraform lifecycle prevent_destroy rds s3",
-              markdown: "Permet d'éviter la suppression accidentelle d'une ressource critique (comme une instance `RDS` ou un bucket d'état `S3`) lors d'un `terraform apply` instable ou d'un refactoring de code un peu trop agressif.",
-              lang: "hcl",
-              code: `resource "aws_db_instance" "prod_db" {
-  # ... configuration de la ressource
-  
-  lifecycle {
-    prevent_destroy = true
-  }
-}`
-            }
-          ]
+          title: "Calcul, Conteneurs & Serverless (Subtilités)",
+          tags: ["Compute", "Containers", "Serverless"],
+          search: "lambda snapstart ecs eks ecr fargate unmanaged managed",
+          markdown: "Unmanaged vs Managed vs Serverless :\nUnmanaged : AWS s'occupe du physique. Tu gères OS, patchs sécu, config (Ex: EC2).\nManaged : AWS gère infrastructure, OS, backups, updates. Tu gères uniquement la config du service et les données (Ex: RDS).\nServerless : Tu envoies juste le code. Scaling automatique, pas de serveur à gérer, facturation à l'usage réel (Ex: Lambda).\n\nLambda : Exécution sur événement. Facturation à la milliseconde.\nTricky : Une fonction ne peut pas durer plus de 15 min.\nTricky : **Lambda SnapStart** réduit le *cold start* via une snapshot de l'environnement (surtout pratique pour Java).\n\nECS vs EKS : Orchestrateurs de conteneurs Docker à grande échelle. ECS est propre à AWS et simple. EKS est basé sur Kubernetes (open-source), idéal pour rester compatible multi-cloud.\n\nECR : Le \"parking\" / \"garde-manger\" pour stocker et déployer les images Docker de manière sécurisée.\n\nMoteurs de calcul (Launch types) :\nAvec EC2 : Contrôle total des serveurs (OS, type de machine) -> Unmanaged/Managed.\nAvec Fargate : Zéro serveur à administrer, moteur serverless, tu définis juste CPU/RAM.\n\nRésumé flash : ECS/EKS = Chef d'orchestre | ECR = Parking | EC2/Fargate = Moteur.",
+          lang: "text",
+          code: "Lambda Max = 15min\nJava Cold Start -> SnapStart\nECS/EKS (Orchestrateur) -> ECR (Parking) -> EC2/Fargate (Moteur)"
         },
         {
-          category: "AWS Security & Network",
-          memos: [
-            {
-              title: "Génération et décodage du Credential Report",
-              tags: ["AWS-CLI", "Audit"],
-              search: "aws iam credential report mfa audit cve",
-              markdown: "Génère et extrait un rapport d'audit complet au format **CSV**. C'est un outil essentiel pour monitorer l'état de sécurité du compte :\\n1. Vérification du statut d'activation globale du **MFA**.\\n2. Analyse de l'âge des clés d'accès et historique des rotations.",
-              lang: "bash",
-              code: `# Déclencher la génération du rapport côté AWS
-aws iam generate-credential-report
-
-# Récupérer le contenu et le décoder du base64 pour l'afficher à l'écran
-aws iam get-credential-report --output text --query 'Content' | base64 -d`
-            }
-          ]
-        }
-    ],
-    en: [
-        {
-          category: "HashiCorp Terraform",
-          memos: [
-            {
-              title: "Advanced Lifecycle Blocks Control",
-              tags: ["IaC", "Production"],
-              search: "terraform lifecycle prevent_destroy rds s3",
-              markdown: "Prevents accidental deletion of critical resources (such as an `RDS` database instance or an `S3` state bucket) during unstable `terraform apply` runs or aggressive code refactoring.",
-              lang: "hcl",
-              code: `resource "aws_db_instance" "prod_db" {
-  # ... resource configuration
-  
-  lifecycle {
-    prevent_destroy = true
-  }
-}`
-            }
-          ]
+          title: "Réseau VPC, Routage & Connectivité Privée",
+          tags: ["Network", "VPC", "Routing"],
+          search: "nacl security group endpoint privatelink global accelerator direct connect vpn",
+          markdown: "Règles d'or des sous-réseaux :\nTricky : Un subnet c'est **forcément** une seule AZ.\nTricky : **VPC Sharing** = Partager des subnets dans le VPC, pas le VPC entier.\n\nNACL vs Security Group :\nSecurity Group : Pare-feu niveau instance (EC2). **Stateful** (se souvient du trafic, la réponse sort auto). Ne fait que du **Allow** (bloque tout par défaut).\nNACL : Pare-feu niveau sous-réseau (un NACL par subnet). **Stateless** (les règles doivent être vérifiées à l'aller ET au retour dans les 2 sens). Idéal pour du **Deny** massif (bloquer une IP malveillante spécifique).\n\nVPC Endpoints :\nTricky : Les **Gateway Endpoints** n'existent **que** pour **S3** et **DynamoDB**.\nTricky : Pour tous les autres services (comme EFS), on utilise obligatoirement des **Interface Endpoints (AWS PrivateLink)**.\n\nPasserelles Externes :\nInternet Gateway (IGW) : Porte d'entrée publique indispensable pour le trafic bidirectionnel avec Internet (sites web publics).\nNAT Gateway : Passerelle à sens unique. Permet aux instances privées (BDD) d'aller sur Internet (mises à jour) tout en restant masquées/invisibles derrière une autre IP de l'extérieur.\nTransit Gateway : Hub central (routeur) pour interconnecter VPC et réseaux on-premises sans faire de fouillis.\n\nRoutage de trafic avancé :\nTricky : **Global Accelerator** = Pour le trafic **non-HTTP** (ex: UDP ou MQTT). Permet aussi le déploiement Blue/Green.\nTricky : **CloudFront** = Pour le trafic **HTTP** (stocke dans les edge locations).\nTricky : CloudFront ne pointe **jamais** vers un DNS Route 53 (sinon boucle infinie).\nTricky : Le certificat SSL pour CloudFront doit **obligatoirement** être demandé dans **us-east-1**.\nTricky : Pour les endpoints régionaux (ALB, API Gateway), les certificats SSL doivent être demandés dans la région concernée.\n\nAide-mémoire Examen Connectivité :\nIndividus vers AWS → Client VPN (élastique, managed, serverless).\nBureaux vers AWS via Internet → Site-to-Site VPN (tunnel IPsec chiffré, rapide, économique, bon backup si Direct Connect plante).\nService vers VPC sans Internet → PrivateLink.\nPerformance garantie / gros transferts de data → Direct Connect (ligne fibre optique privée dédiée, contourne Internet, rapide, sans embouteillages).",
+          lang: "text",
+          code: "1 Subnet = 1 AZ (Strict)\nSecurity Group = Stateful + Allow seulement\nNACL = Stateless + Gère le Deny\nS3/DynamoDB = Gateway Endpoint | Autres = Interface Endpoint\nCloudFront Certificat = us-east-1 indispensable"
         },
         {
-          category: "AWS Security & Network",
-          memos: [
-            {
-              title: "Credential Report Generation & Decoding",
-              tags: ["AWS-CLI", "Audit"],
-              search: "aws iam credential report mfa audit cve",
-              markdown: "Generates and extracts an account-wide audit report in **CSV** format. Critical tool for account security monitoring:\\n1. Global **MFA** activation status verification.\\n2. Access keys age tracking and rotation cycles analysis.",
-              lang: "bash",
-              code: `# Trigger the report generation on AWS side
-aws iam generate-credential-report
-
-# Retrieve the payload and decode it from base64 to print it out
-aws iam get-credential-report --output text --query 'Content' | base64 -d`
-            }
-          ]
+          title: "Stockage (EBS, Instance Store, S3, EFS, FSx, Gateways)",
+          tags: ["Storage"],
+          search: "ebs instance store s3 efs fsx storage gateway file volume tape dlm s3ta",
+          markdown: "Stockage Bloc EC2 :\nEC2 Instance Store : Stockage local du serveur. Non persistant (si tu l'éteins, tu perds tout).\nAmazon EBS : Disque dur virtuel persistant (bloc, type SSD pour OS/BDD) lié à une instance. Doit être dans la même AZ pour y accéder.\nTricky : Pendant qu'EBS fait une snapshot, tu peux continuer à utiliser le disque normalement, il ne s'arrête pas. Géré via **Amazon DLM** pour automatiser la création/durée de rétention.\nTricky : Pour avoir du **High I/O**, il faut en priorité un bon disque de stockage.\n\nAmazon S3 (Stockage Objet) : Fichiers rangés dans des buckets uniques au monde, privé par défaut (géré via Bucket Policies).\nS3 Lifecycle : Déplacement auto via *Transition actions* (ex: vers Glacier après 90 jours) ou suppression via *Expiration actions* (ex: logs d'un an).\nTricky : **S3TA (Transfer Acceleration)** = Accélère uniquement le trajet entre un client (PC, mobile, serveur local) et un bucket via les Edge Locations. Pas de transfert bucket à bucket.\n\nStockage Partagé (EFS vs FSx) :\nAmazon EFS : Système de fichiers partagé (protocole NFS) pour instances EC2. Élastique et accessible depuis **plusieurs AZ** en même temps.\nAmazon FSx : Stockage géré multi-protocoles très haute performance (HPC, machine learning). Supporte Windows (SMB), Lustre, NetApp ONTAP, OpenZFS.\n\nAWS Storage Gateway (Hybride local/cloud) :\nS3 File Gateway : Fait apparaître les buckets S3 comme des dossiers partagés locaux (NFS/SMB).\nVolume Gateway : Présente le stockage cloud comme des disques durs virtuels locaux via protocole **iSCSI**. Stocké sous forme de snapshots EBS.\nCached Mode : Données complètes sur AWS, seuls les fichiers récents sont en cache local pour la vitesse.\nStored Mode : Données stockées intégralement en local, sauvegardes automatiques vers AWS.\nTape Gateway : Remplace les infrastructures de bandes magnétiques physiques par des bandes virtuelles sur S3 Glacier.",
+          lang: "text",
+          code: "Instance Store = Éphémère (Perte si arrêt) | EBS = Snapshot sans arrêt\nEFS = NFS Linux Multi-AZ | FSx = SMB Windows & Lustre HPC\nVolume Gateway = Protocole iSCSI\nS3TA = Client -> Bucket (Pas bucket -> bucket)"
+        },
+        {
+          title: "Bases de Données (RDS, Aurora, DynamoDB, ElastiCache, Outils)",
+          tags: ["Database", "Cache"],
+          search: "rds aurora dynamodb elasticache redis memcached documentdb neptune backup",
+          markdown: "Bases Relationnelles (SQL) :\nAmazon RDS : SQL géré (MySQL, Postgres, Oracle). Utilisez le **Multi-AZ** pour la haute disponibilité (survie en cas de panne) et les **Read Replicas** pour booster les performances de lecture.\nAmazon Aurora : Version premium cloud-native de RDS (jusqu'à 5x plus rapide). Réplique les données 6 fois sur 3 AZ différentes. Utilise *Aurora Autoscaling* pour ajuster dynamiquement les performances des read replicas.\n\nBases NoSQL & Spécialisées :\nAmazon DynamoDB : NoSQL clé-valeur serverless, performances constantes (latence en millisecondes), schéma flexible.\nTricky : **L'autoscaling de DynamoDB n'est pas activé par défaut**.\nAmazon DocumentDB : Base documentaire gérée pour données semi-structurées (fichiers JSON).\nTricky : Retenir sa compatibilité absolue avec **MongoDB**.\nAmazon Neptune : Base de données de type **Graph** pour analyser les relations complexes (réseaux sociaux, moteurs de recommandation, détection de fraude).\n\nMise en cache (Amazon ElastiCache) : Infos stockées en RAM pour répondre en moins d'une milliseconde.\nTricky : **Tout le temps Redis** par défaut (réplication, haute disponibilité).\nTricky : Choisir **Memcached** uniquement si l'architecture requiert du **multi-thread**.\n\nSauvegarde & Migration :\nAWS Backup : Centralise et automatise les stratégies de sauvegarde sur tout AWS (EBS, EFS, RDS) au lieu de configurer séparément.\nAWS DMS (Database Migration Service) : Migration sécurisée. La BDD source reste **totalement opérationnelle** pendant le transfert (downtime minimal). Peut continuer à synchroniser en continu.\nTricky : On peut utiliser DMS pour pousser des données de S3 vers Kinesis Data Streams.",
+          lang: "text",
+          code: "DynamoDB Autoscaling = OFF par défaut\nMongoDB = DocumentDB | Graph = Neptune\nCache standard = Redis | Cache Multi-thread = Memcached\nDMS = BDD source active pendant migration"
+        },
+        {
+          title: "Data Analytics, ETL & Processus Data",
+          tags: ["Analytics", "Data"],
+          search: "etl kinesis streams firehose glue redshift spectrum emr athena quicksight",
+          markdown: "Le processus ETL : Extract (récupère de sources variées), Transform (nettoie/formate), Load (envoie vers la destination comme un entrepôt).\n\nCollecte et Flux de données :\nAmazon Kinesis Data Streams : Capture et collecte de données en streaming en temps réel à très grande échelle (logs, capteurs IoT).\nAmazon Data Firehose : Charge les flux en \"presque\" temps réel (quelques secondes de délai) directement vers S3 ou Redshift avec mise à l'échelle automatique.\n\nStockage et Entrepôts :\nAmazon S3 (Data Lake) : Point de départ de tout pipeline, stocke tout du brut au non-structuré.\nAmazon Redshift : Data Warehouse haute performance optimisé pour les analyses complexes sur des pétaoctets de données structurées.\nTricky : **Redshift Spectrum** = Permet de requêter directement les données de S3 depuis Redshift sans aucun chargement préalable.\nAWS Glue : Service ETL géré qui prépare et nettoie les données. Inclut un *Data Catalog* (index/inventaire de toutes tes sources).\nAmazon EMR : Le \"poids lourd\" du Big Data, utilise des frameworks comme Apache Spark ou Hadoop sur des volumes gigantesques via des clusters de serveurs.\n\nRequêtage & Visualisation :\nAmazon Athena : Service de requêtes Serverless pour analyser les données de S3 en utilisant simplement du **SQL**, sans rien installer (facturation uniquement à la requête).\nAmazon QuickSight : Outil de visualisation pour créer des tableaux de bord interactifs (dashboards).\nAmazon OpenSearch Service : Recherche et surveillance de logs textuels en temps réel pour trouver des erreurs ou incidents de sécurité.",
+          lang: "text",
+          code: "Redshift Spectrum = Requêtes Redshift -> S3 sans import\nAthena = Requêtes SQL directes sur S3 (Serverless)\nEMR = Big Data massifs (Spark/Hadoop)"
+        },
+        {
+          title: "Gestion des Accès IAM & Sécurité des Identités",
+          tags: ["Security", "IAM"],
+          search: "iam user group role policy deny boundary identity center secrets manager systems manager",
+          markdown: "Principes de base de l'IAM : Compétence n°1 de l'Ingénieur Sécurité. Par défaut, tout est interdit (**Implicit Deny**). Principe du moindre privilège.\nTricky : Pour les IAM Policies, **s'il y a un Deny, alors c'est Deny** (l'emporte sur n'importe quel Allow).\nTricky : On ne peut **pas** attacher une *permission boundary* à un groupe.\nTricky : L'IAM est global, donc on peut utiliser le même rôle pour plusieurs régions.\n\nComposants clés :\nIAM User : Une personne ou application au sein de l'organisation avec son propre identifiant/mot de passe.\nIAM Group : Ensemble d'utilisateurs qui héritent des permissions du groupe (facilite la gestion).\nIAM Role : Identité pour accorder un accès temporaire sans mot de passe.\nTricky : Le rôle est dédié à ceux qui n'ont **pas de compte utilisateur permanent** (les services AWS comme EC2, les utilisateurs de l'entreprise via Active Directory, ou les utilisateurs d'autres comptes AWS).\nIAM Policy : Document JSON définissant précisément les autorisations/interdictions attaché à un utilisateur, groupe ou rôle.\n\nGestion centralisée et secrets :\nAWS IAM Identity Center (ex-SSO) : Centralise la connexion à plusieurs comptes AWS et applications avec un seul identifiant (Federated Identity) dans les grandes entreprises.\nAWS Secrets Manager : Stocke et fait pivoter (*rotate*) automatiquement les mots de passe de BDD, clés API et secrets pour éviter de les laisser \"en dur\" dans le code.\nAWS Systems Manager : Gestion à distance centralisée des serveurs (nodes) pour patcher la sécurité de centaines de machines en un clic ou gérer les configs sans connexion manuelle.",
+          lang: "json",
+          code: "{\n  \"Effect\": \"Deny\",\n  \"Action\": \"*\",\n  \"Resource\": \"*\"\n}"
+        },
+        {
+          title: "Protection, Détection & Audits de Sécurité",
+          tags: ["Security", "SecOps", "Audit"],
+          search: "shield waf kms macie acm inspector guardduty detective security hub artifact config audit manager",
+          markdown: "Protection active :\nAWS Shield : Protection contre les attaques DDoS. Version Standard gratuite et automatique. Version Advanced payante contre les attaques sophistiquées avec accès aux experts 24/7.\nAWS WAF (Web Application Firewall) : Pare-feu applicatif filtrant le trafic HTTP/HTTPS entrant contre l'injection SQL ou le XSS via des listes Web ACL.\nAWS KMS : Service centralisé de création et gestion des clés de chiffrement (les clés ne quittent jamais le service, contrôlé via IAM).\n\nDétection, Analyse & Conformité :\nAmazon Inspector : Analyse automatique des vulnérabilités logicielles (**CVE**) et erreurs de configuration sur EC2, conteneurs et fonctions Lambda.\nAmazon GuardDuty : Détection intelligente des menaces qui inspecte les logs et surveille l'activité réseau via le machine learning (ex: minage crypto).\nAmazon Detective : Outil d'investigation après une attaque pour remonter à la cause profonde (*root cause*) via des visualisations interactives.\nAWS Security Hub : Tableau de bord centralisé de la sécurité qui agrège les alertes (GuardDuty, Inspector, Macie) et montre le niveau de conformité global.\nAmazon Macie : Utilise l'IA pour découvrir et protéger les données sensibles (cartes bancaires, passeports) stockées dans Amazon S3.\n\nGouvernance & Audit de l'infrastructure :\nAWS CloudTrail : Traçabilité et audit. Enregistre chaque action effectuée sur le compte (qui a fait quoi, quand, depuis quelle IP) sous forme d'historique d'appels API.\nAWS Config : Surveille les configurations des ressources, enregistre l'historique des changements et vérifie la conformité par rapport à tes règles de sécurité (peut corriger automatiquement).\nAWS Artifact : Portail gratuit pour télécharger les rapports officiels de conformité d'AWS (ISO, PCI, SOC) et gérer les accords juridiques (BAA pour les données de santé).\nAWS Audit Manager : Aide à préparer les audits en collectant automatiquement des preuves de l'utilisation d'AWS par rapport aux standards de l'industrie (RGPD, PCI DSS).",
+          lang: "text",
+          code: "CloudTrail = Actions API (Qui a fait quoi?) | AWS Config = Conformité des configurations\nInspector = Détection des CVE | GuardDuty = Surveillance intelligente des logs"
+        },
+        {
+          title: "Gouvernance Multi-Comptes, Évaluations & Déploiement",
+          tags: ["Governance", "Deployment", "Migration"],
+          search: "organizations scp control tower service catalog cloudformation beanstalk mgn sct",
+          markdown: "Gestion multi-comptes d'entreprise :\nAWS Organizations : Gestion centrale pour regrouper et gérer plusieurs comptes AWS par unités organisationnelles (OU) avec facturation consolidée (*Consolidated Billing*) pour bénéficier de remises sur volume.\nService Control Policies (SCP) : Fixent les limites maximales de permissions pour tous les comptes d'une organisation ou d'une OU (peut interdire des régions ou la suppression de logs, même aux admins).\nAWS Control Tower : Met en place un environnement multi-comptes sécurisé (*Landing Zone*) en quelques clics et applique des règles de sécurité obligatoires (*Guardrails*) comme l'activation du MFA ou de CloudTrail.\n\nDéploiement & Catalogues :\nCloudFormation : Infrastructure as Code (IaC). Fichier template (YAML ou JSON) décrivant les ressources pour les créer automatiquement dans un ensemble appelé \"Stack\" (infrastructure répétable sans erreur humaine).\nElastic Beanstalk : Déploiement simplifié au maximum d'applications web. Tu uploades le code (Java, Python, Node.js) et AWS gère automatiquement le provisionnement, l'ELB, l'auto-scaling et le monitoring.\nAWS Service Catalog : Catalogue de modèles de ressources pré-approuvées (ex: \"Serveur Web Sécurisé Standard\") par l'équipe informatique pour les développeurs.\n\nOutils Techniques de Migration :\nAWS MGN (Application Migration Service) : Le \"camion de déménagement\" principal pour déplacer et moderniser automatiquement des serveurs physiques/virtuels vers AWS sans interruption utilisateur.\nAWS SCT (Schema Conversion Tool) : Indispensable en migration hétérogène (changement de moteur de BDD, ex: Oracle vers Postgres) pour traduire automatiquement le schéma et le code interne.\nAWS Snowball Edge Storage Optimized  : Valise physique blindée contenant des disques pour copier des téraoctets de données localement et les envoyer par transporteur vers S3 (évite de saturer le réseau pendant des mois).\nStratégie Disaster Recovery (Pilot Light) : Tout est en place (y compris les bases de données répliquées), mais les serveurs de calcul restent éteints pour économiser de l'argent (démarrés uniquement en cas de sinistre).",
+          lang: "text",
+          code: "Organizations -> Regroupement comptes + Consolidated Billing\nSCP = Limites max de permissions (Même pour l'admin)\nCloudFormation = IaC (Templates JSON/YAML)\nPilot Light = BDD active + Serveurs éteints"
         }
-    ]
+      ]
+    }
+  ]
 };
