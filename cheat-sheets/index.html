@@ -96,12 +96,13 @@
 
     /* Rendu Markdown simple */
     .explanation-markdown { font-size: 14px; color: var(--muted); margin-bottom: 14px; }
-    .explanation-markdown p { margin-bottom: 8px; }
-    .explanation-markdown ul, .explanation-markdown ol { padding-left: 20px; margin-bottom: 10px; }
-    .explanation-markdown li { margin-bottom: 4px; }
+    .explanation-markdown p { margin-bottom: 12px; }
+    .explanation-markdown ul, .explanation-markdown ol { padding-left: 20px; margin-bottom: 14px; }
+    .explanation-markdown li { margin-bottom: 6px; }
     .explanation-markdown code { font-family: var(--mono); background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; color: var(--fg); font-size: 12px; }
     html.light .explanation-markdown code { background: rgba(0,0,0,0.06); }
     .explanation-markdown strong { color: var(--fg); }
+    .explanation-markdown img { max-width: 100%; height: auto; margin: 16px 0; border-radius: 8px; display: block; border: 1px solid var(--border); }
 
     /* --- CONTAINER DE CODE / APPARENCE TERMINAL --- */
     .editor-container { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative; font-family: var(--mono); font-size: 12.5px; }
@@ -110,8 +111,7 @@
     .copy-btn { background: transparent; border: none; color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .copy-btn:hover { color: var(--fg); }
     
-    .code-content { padding: 14px 16px; overflow-x: auto; white-space: pre; color: #bdbdbd; }
-    .comment { color: #707d8b; font-style: italic; }
+    .code-content { padding: 14px 16px; overflow-x: auto; white-space: pre; color: #bdbdbd; line-height: 1.5; }
     .separator { border: none; height: 1px; background: var(--border); margin: 30px 0; }
 
     @media (max-width: 768px) {
@@ -174,62 +174,64 @@
     });
   }
 
-  // Parseur Markdown minimaliste pour traiter le champ markdown de config2.js
+  // Parseur d'affichage robuste (Markdown vers HTML sécurisé)
   function parseMarkdown(text) {
     if (!text) return '';
-    let html = text
+    
+    // Étape 1 : Protection contre les injections XSS
+    let escaped = text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/`(.*?)`/g, '<code>$1</code>');
+      .replace(/>/g, '&gt;');
 
-    if (html.includes('\\n* ') || html.includes('\n* ')) {
-      const lines = html.split(/\\n|\n/);
-      let inList = false;
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].trim().startsWith('* ')) {
-          lines[i] = (inList ? '' : '<ul>') + `<li>${lines[i].trim().substring(2)}</li>`;
-          inList = true;
-        } else if (inList) {
-          lines[i] = '</ul>' + lines[i];
-          inList = false;
-        }
+    // Étape 2 : Extraction et préservation des images Markdown ![alt](url)
+    const images = [];
+    escaped = escaped.replace(/!\[(.*?)\]\((.*?)\)/g, function(match, alt, src) {
+      const placeholder = `___IMG_PLACEHOLDER_${images.length}___`;
+      images.push(`<img src="${src}" alt="${alt}">`);
+      return placeholder;
+    });
+
+    // Étape 3 : Rendu des structures sémantiques standards (Gras et Code Inline)
+    escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    escaped = escaped.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+    escaped = escaped.replace(/`(.*?)`/g, '<code>$1</code>');
+
+    // Étape 4 : Traitement ligne par ligne pour isoler les listes et paragraphes
+    const lines = escaped.split('\n');
+    let output = '';
+    let isList = false;
+
+    lines.forEach(line => {
+      let content = line.trim();
+      if (!content) return;
+
+      if (content.startsWith('* ') || content.startsWith('- ')) {
+        if (!isList) { output += '<ul>'; isList = true; }
+        output += `<li>${content.substring(2)}</li>`;
+      } else {
+        if (isList) { output += '</ul>'; isList = false; }
+        output += `<p>${content}</p>`;
       }
-      if (inList) lines[lines.length - 1] += '</ul>';
-      html = lines.join('\n');
-    }
+    });
+    if (isList) output += '</ul>';
 
-    if (html.match(/\\n\d+\.\s/) || html.match(/\n\d+\.\s/)) {
-      const lines = html.split(/\\n|\n/);
-      let inList = false;
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].trim().match(/^\d+\.\s/)) {
-          lines[i] = (inList ? '' : '<ol>') + `<li>${lines[i].trim().replace(/^\d+\.\s/, '')}</li>`;
-          inList = true;
-        } else if (inList) {
-          lines[i] = '</ol>' + lines[i];
-          inList = false;
-        }
-      }
-      if (inList) lines[lines.length - 1] += '</ol>';
-      html = lines.join('\n');
-    }
+    // Étape 5 : Ré-injection sécurisée des images hors des balises textuelles <p>
+    images.forEach((imgTag, idx) => {
+      output = output.replace(`<p>___IMG_PLACEHOLDER_${idx}___</p>`, imgTag);
+      output = output.replace(`___IMG_PLACEHOLDER_${idx}___`, imgTag);
+    });
 
-    return html.split(/\\n\\n|\n\n/).map(p => {
-      if (p.startsWith('<ul>') || p.startsWith('<ol>')) return p;
-      return `<p>${p.replace(/\\n|\n/g, '<br>')}</p>`;
-    }).join('');
+    return output;
   }
 
-  // RENDER GÉNÉRATEUR DYNAMIQUE DE LA PAGE DEPUIS LE FICHIER DE CONFIGURATION
   function renderCheatSheet(lang) {
     const container = document.getElementById('accordion-container');
     const data = CHEATSHEET_DATA[lang] || CHEATSHEET_DATA['fr'];
     container.innerHTML = '';
 
     data.forEach((cat, index) => {
-      const isOpen = index === 0 ? 'open' : '';
+      const isOpen = '';
       let categoryHtml = `
         <div class="collapse-group ${isOpen}">
           <div class="collapse-header" onclick="toggleCollapse(this)">
@@ -268,7 +270,6 @@
     });
   }
 
-  // BARRE DE RECHERCHE
   const searchInput = document.getElementById('search-input');
   searchInput.addEventListener('input', () => {
     const query = searchInput.value.toLowerCase().trim();
@@ -284,7 +285,6 @@
     });
   });
 
-  // LOGIQUE TRADUCTION & INTERNATIONNALISATION
   function applyLanguage(lang) {
     localStorage.setItem('pref-lang', lang);
     document.body.className = (lang === 'en') ? 'lang-en' : 'lang-fr';
@@ -302,7 +302,6 @@
     applyLanguage(document.body.classList.contains('lang-en') ? 'fr' : 'en');
   });
 
-  // LOGIQUE DE THEME D'ARRIÈRE-PLAN
   function applyTheme(theme) {
     const isLight = (theme === 'light');
     if (isLight) {
@@ -327,7 +326,6 @@
     applyTheme(document.documentElement.classList.contains('light') ? 'dark' : 'light');
   });
 
-  // --- RENDU CANVAS PARTICULES ---
   const canvas = document.getElementById('bg-canvas');
   const ctx = canvas.getContext('2d');
   let pArr = [];
